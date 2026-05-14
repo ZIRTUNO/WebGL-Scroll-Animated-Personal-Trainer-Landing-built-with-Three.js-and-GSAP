@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diego Santos | Personal Trainer e Treinamento de Alta Performance</title>
+  <meta
+    name="description"
+    content="Treinamento de alta performance com Diego Santos, personal trainer especializado em força, técnica e progressão para transformar corpo, rotina e performance."
+  />
+  <link rel="canonical" href="https://diegosantos.fit/" />
+  <link rel="icon" type="image/png" href="assets/logo-mark.png" />
+  <meta property="og:title" content="Diego Santos | Personal Trainer e Treinamento de Alta Performance" />
+  <meta
+    property="og:description"
+    content="Treinamento de alta performance com método, técnica e progressão para quem quer subir de patamar."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://diegosantos.fit/" />
+  <meta property="og:image" content="https://diegosantos.fit/assets/diego-jacket.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Diego Santos | Personal Trainer e Treinamento de Alta Performance" />
+  <meta
+    name="twitter:description"
+    content="Treinamento de alta performance com método, técnica e progressão para quem quer subir de patamar."
+  />
+  <meta name="twitter:image" content="https://diegosantos.fit/assets/diego-jacket.png" />
+  <meta name="theme-color" content="#05050a" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="Diego Santos" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Diego Santos",
+    "jobTitle": "Personal Trainer",
+    "url": "https://diegosantos.fit/",
+    "telephone": "+557592022059",
+    "image": "https://diegosantos.fit/assets/diego-jacket.png",
+    "sameAs": [
+      "https://www.instagram.com/santos__diegooo/"
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="preload" as="image" href="assets/diego-jacket.png" fetchpriority="high" />
+
+  <link rel="stylesheet" href="css/main.css" />
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script defer src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://unpkg.com/gsap@3.12.5/dist/Flip.min.js"></script>
+  <script defer src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <div class="bg-blobs" aria-hidden="true">
+    <span class="b1"></span>
+    <span class="b2"></span>
+    <span class="b3"></span>
+  </div>
+  <div id="dumbbell-stage" aria-hidden="true"></div>
+
+  <aside class="scroll-rail" aria-hidden="true">
+    <span class="dot active" data-i="0"></span>
+  </aside>
+
+  <nav class="nav" aria-label="Navegação principal">
+    <div class="container row">
+      <a href="#topo" class="brand">
+        <img src="assets/logo-mark.png" width="1024" height="1024" alt="Marca DS de Diego Santos" />
+        <div class="name">
+          DIEGO<span>·</span>SANTOS
+          <small>PERSONAL TRAINER</small>
+        </div>
+      </a>
+      <ul>
+        <li><a href="#historia">História</a></li>
+        <li><a href="#metodo">Método</a></li>
+        <li><a href="#servicos">Serviços</a></li>
+        <li><a href="#resultados">Resultados</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <a
+        href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20com%20voc%C3%AA%20sobre%20os%20treinos."
+        class="cta-mini"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Fale com Diego</a>
+
+      <button
+        type="button"
+        class="nav-hamburger"
+        aria-expanded="false"
+        aria-controls="nav-overlay"
+        aria-label="Abrir menu"
+      >
+        <span class="nav-hamburger-bars" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav-overlay" id="nav-overlay" hidden>
+    <div class="nav-overlay-bg" aria-hidden="true"></div>
+    <div class="nav-overlay-panel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+      <ul class="nav-overlay-list">
+        <li><a href="#historia"><span class="nav-overlay-num" aria-hidden="true">01</span>História</a></li>
+        <li><a href="#metodo"><span class="nav-overlay-num" aria-hidden="true">02</span>Método</a></li>
+        <li><a href="#servicos"><span class="nav-overlay-num" aria-hidden="true">03</span>Serviços</a></li>
+        <li><a href="#resultados"><span class="nav-overlay-num" aria-hidden="true">04</span>Resultados</a></li>
+        <li><a href="#faq"><span class="nav-overlay-num" aria-hidden="true">05</span>FAQ</a></li>
+      </ul>
+      <a
+        class="nav-overlay-cta btn btn-primary"
+        href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20com%20voc%C3%AA%20sobre%20os%20treinos."
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Fale com Diego
+        <span class="arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+            <path d="M5 12h14M13 5l7 7-7 7" />
+          </svg>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <main id="conteudo">
+
+  <header id="topo" class="hero" data-section>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <div class="hero-dumbbell-slot" aria-hidden="true"></div>
+
+        <div class="hero-headline-lock">
+          <h1 class="display">
+            <span class="l"><span>SUBA AO SEU</span></span>
+            <span class="l"><span class="grad-text">PRÓXIMO</span></span>
+            <span class="l"><span>PATAMAR.</span></span>
+          </h1>
+        </div>
+
+        <div class="hero-support">
+          <p class="sub">
+            Treinamento de alta performance para quem trata o próprio corpo como
+            projeto de longo prazo. Disciplina, técnica e progressão guiadas por
+            quem vive o que ensina.
+          </p>
+
+          <div class="ctas">
+            <a
+              class="btn btn-primary"
+              href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20quero%20come%C3%A7ar%20minha%20transforma%C3%A7%C3%A3o.%20Pode%20me%20explicar%20como%20funciona%20o%20acompanhamento%3F"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Comece sua transformação
+              <span class="arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                  <path d="M5 12h14M13 5l7 7-7 7" />
+                </svg>
+              </span>
+            </a>
+            <a
+              class="btn btn-ghost"
+              href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20conversar%20diretamente%20sobre%20meus%20objetivos%20de%20treino."
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Fale com Diego
+              <span class="arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                  <path d="M5 12h14M13 5l7 7-7 7" />
+                </svg>
+              </span>
+            </a>
+          </div>
+
+          <div class="stats">
+            <div class="s"><strong data-count>+12</strong><span>anos de carreira</span></div>
+            <div class="s"><strong data-count>+800</strong><span>alunos formados</span></div>
+            <div class="s"><strong data-count>04</strong><span>atletas competitivos</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="vbeam" aria-hidden="true"></div>
+        <div class="vbeam b2" aria-hidden="true"></div>
+        <div class="frame">
+          <img
+            src="assets/diego-jacket.png"
+            width="1122"
+            height="1402"
+            alt="Diego Santos em ambiente de treino apontando para a marca DS"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </div>
+        <div class="border-grad"></div>
+        <div class="badge"><i></i> ATENDIMENTO ATIVO 2026</div>
+        <div class="tag">
+          <span class="vlabel">PERFORMANCE · DISCIPLINA · MOVIMENTO</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="ticker" aria-hidden="true">
+    <div class="track">
+      <span>MONTANHA <i>◆</i></span>
+      <span class="fill">PROGRESSÃO</span>
+      <span>MOVIMENTO <i>◆</i></span>
+      <span class="fill">DISCIPLINA</span>
+      <span>FORÇA <i>◆</i></span>
+      <span class="fill">PERFORMANCE</span>
+      <span>MONTANHA <i>◆</i></span>
+      <span class="fill">PROGRESSÃO</span>
+      <span>MOVIMENTO <i>◆</i></span>
+      <span class="fill">DISCIPLINA</span>
+      <span>FORÇA <i>◆</i></span>
+      <span class="fill">PERFORMANCE</span>
+    </div>
+  </section>
+
+  <section id="historia" class="sec story" data-section>
+    <div class="container">
+      <div class="sec-num">01<em>História</em></div>
+
+      <div class="story-grid" style="margin-top:20px">
+        <div class="story-img reveal">
+          <img
+            src="assets/diego-bench.png"
+            width="1086"
+            height="1448"
+            alt="Diego Santos sentado em banco de treino dentro da academia"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="corners"></div>
+        </div>
+
+        <div>
+          <span class="eyebrow">Quem é Diego</span>
+          <h2 class="h2 reveal" style="margin-top:18px">
+            A SUBIDA<br />
+            <span class="grad-text">COMEÇA NA</span><br />
+            DECISÃO.
+          </h2>
+          <p class="lead reveal" style="margin-top:30px">
+            Mais de uma década dedicado a transformar corpo, mente e rotina.
+            Diego construiu um método próprio em cima de três pilares: escuta,
+            técnica e consistência. Esse método já guiou centenas de alunos e atletas
+            em busca da melhor versão de si.
+          </p>
+
+          <div class="story-cards reveal" data-cards role="list">
+            <div class="story-card" role="listitem">
+              <div class="ic" aria-hidden="true">01</div>
+              <h3>MONTANHA</h3>
+              <p>Alicerce sólido. Cada plano nasce da base: postura, mobilidade e respiração, para sustentar progressões reais.</p>
+            </div>
+            <div class="story-card" role="listitem">
+              <div class="ic" aria-hidden="true">02</div>
+              <h3>PROGRESSÃO</h3>
+              <p>Uma trilha mensurável. Cargas, volumes e ciclos calibrados semana a semana com base no seu corpo, não em planilhas genéricas.</p>
+            </div>
+            <div class="story-card" role="listitem">
+              <div class="ic" aria-hidden="true">03</div>
+              <h3>MOVIMENTO</h3>
+              <p>Ritmo e fluidez. Treino que respeita biomecânica, melhora performance e devolve liberdade ao seu dia a dia.</p>
+            </div>
+            <div class="story-card" role="listitem">
+              <div class="ic" aria-hidden="true">04</div>
+              <h3>DISCIPLINA</h3>
+              <p>Compromisso compartilhado. Acompanhamento próximo, feedback constante e cobrança equilibrada com humanidade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="metodo" class="sec method" data-section>
+    <div class="container">
+      <div class="sec-head">
+        <div class="left">
+          <div class="sec-num">02<em>Método</em></div>
+          <span class="eyebrow" style="display:block;margin-top:30px">O método DS</span>
+          <h2 class="h2" style="margin-top:18px">
+            QUATRO ETAPAS,<br />
+            UMA <span class="grad-text">TRILHA</span> CLARA.
+          </h2>
+        </div>
+        <p class="lead">
+          Um processo iterativo que respeita seu tempo e calibra carga, técnica
+          e estilo de vida. O caminho não é linear; é progressivo.
+        </p>
+      </div>
+
+      <div class="method-rail" role="list">
+        <div class="step reveal" role="listitem">
+          <span class="n" aria-hidden="true">01</span>
+          <h3>DIAGNÓSTICO</h3>
+          <p>Anamnese completa, avaliação postural e teste de movimento. Mapeamos onde você está antes de definir para onde vai.</p>
+        </div>
+        <div class="step reveal" role="listitem">
+          <span class="n" aria-hidden="true">02</span>
+          <h3>BASE</h3>
+          <p>Construção de fundação técnica, com padrões motores, mobilidade e respiração que sustentam toda a progressão futura.</p>
+        </div>
+        <div class="step reveal" role="listitem">
+          <span class="n" aria-hidden="true">03</span>
+          <h3>EVOLUÇÃO</h3>
+          <p>Periodização real. Ciclos de força, hipertrofia e condicionamento ajustados a cada três a seis semanas.</p>
+        </div>
+        <div class="step reveal" role="listitem">
+          <span class="n" aria-hidden="true">04</span>
+          <h3>PICO</h3>
+          <p>Integração de hábitos, performance sustentável e marcas pessoais. O treino vira parte da sua identidade.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicos" class="sec" data-section>
+    <div class="container">
+      <div class="sec-head">
+        <div class="left">
+          <div class="sec-num">03<em>Serviços</em></div>
+          <span class="eyebrow" style="display:block;margin-top:30px">Como trabalhamos juntos</span>
+          <h2 class="h2" style="margin-top:18px">
+            TRÊS FRENTES.<br />
+            UMA <span class="grad-text">DIREÇÃO</span>.
+          </h2>
+        </div>
+        <p class="lead">
+          Escolha o formato que conversa com o seu momento. Todos partem da
+          mesma exigência: precisão, presença e progressão.
+        </p>
+      </div>
+
+      <div class="services-grid" role="list">
+        <article class="svc reveal" role="listitem">
+          <div class="ic">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M3 21V8l9-5 9 5v13" />
+              <path d="M9 21v-7h6v7" />
+              <path d="M3 21h18" />
+            </svg>
+          </div>
+          <span class="label">01 · Estratégia</span>
+          <h3>CONSULTORIA<br />ESPECIALIZADA</h3>
+          <p>
+            Direcionamento técnico para quem treina sozinho ou já tem rotina
+            ativa, mas precisa de um plano sólido, atualizado e desenhado por
+            quem entende seu corpo.
+          </p>
+          <ul>
+            <li>Anamnese e avaliação online</li>
+            <li>Programa periodizado mensal</li>
+            <li>Ajustes quinzenais e suporte direto</li>
+          </ul>
+          <a
+            class="more"
+            href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20consultoria%20especializada."
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Saiba mais
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false">
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
+          </a>
+        </article>
+
+        <article class="svc reveal" role="listitem">
+          <div class="ic">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="6" r="3" />
+              <path d="M5 21v-3a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v3" />
+            </svg>
+          </div>
+          <span class="label">02 · Presencial</span>
+          <h3>PERSONAL<br />TRAINING</h3>
+          <p>
+            Acompanhamento individual presencial para quem busca evolução real
+            com olho crítico em cada repetição. Foco em técnica, consistência e
+            resposta corporal semana a semana.
+          </p>
+          <ul>
+            <li>Sessão 1‑a‑1 em estúdio parceiro</li>
+            <li>Plano nutricional integrado opcional</li>
+            <li>Reavaliações mensais com métricas</li>
+          </ul>
+          <a
+            class="more"
+            href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20o%20personal%20training."
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Saiba mais
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false">
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
+          </a>
+        </article>
+
+        <article class="svc reveal" role="listitem">
+          <div class="ic">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" />
+            </svg>
+          </div>
+          <span class="label">03 · Alta Performance</span>
+          <h3>COACHING<br />COMPETITIVO</h3>
+          <p>
+            Preparação completa para atletas e amadores avançados em ciclo
+            competitivo. Disciplina, mindset e otimização de performance com
+            leitura semanal e ajuste milimétrico.
+          </p>
+          <ul>
+            <li>Periodização para temporada</li>
+            <li>Acompanhamento de palco e recuperação</li>
+            <li>Estrutura mental e rotina de pico</li>
+          </ul>
+          <a
+            class="more"
+            href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20o%20coaching%20competitivo."
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Saiba mais
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false">
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--tight" data-section>
+    <div class="container">
+      <div class="metrics" role="list">
+        <div class="metric" role="listitem">
+          <strong data-count>96%</strong>
+          <span>retenção mensal</span>
+          <small>Alunos que renovam após o terceiro mês de acompanhamento.</small>
+        </div>
+        <div class="metric" role="listitem">
+          <strong data-count>12+</strong>
+          <span>anos atuando</span>
+          <small>Trajetória entre estúdio, alta performance e atletas competitivos.</small>
+        </div>
+        <div class="metric" role="listitem">
+          <strong data-count>04</strong>
+          <span>atletas no palco</span>
+          <small>Preparações fechadas em temporada 2025/2026 com pódio em duas categorias.</small>
+        </div>
+        <div class="metric" role="listitem">
+          <strong data-count>01</strong>
+          <span>método autoral</span>
+          <small>Quatro etapas, fluxo iterativo, foco em base sólida e progressão real.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="resultados" class="sec" data-section>
+    <div class="container">
+      <div class="sec-head">
+        <div class="left">
+          <div class="sec-num">04<em>Resultados</em></div>
+          <span class="eyebrow" style="display:block;margin-top:30px">O que dizem</span>
+          <h2 class="h2" style="margin-top:18px">
+            QUEM SUBIU<br />
+            JUNTO <span class="grad-text">FALA.</span>
+          </h2>
+        </div>
+        <p class="lead">
+          Histórias reais de quem ressignificou rotina, performance e relação
+          com o próprio corpo.
+        </p>
+      </div>
+
+      <div class="results-grid" role="list">
+        <div class="testi reveal" role="listitem">
+          <span class="quote" aria-hidden="true">”</span>
+          <p>“Cheguei buscando estética e saí com um corpo que respeito. Diego enxerga o que eu mesmo não conseguia ver, desde postura no banco até como eu respirava nos sets pesados.”</p>
+          <div class="who">
+            <div class="av" aria-hidden="true">RM</div>
+            <div>
+              <h5>Rafael M.</h5>
+              <span>Empresário · 14 meses</span>
+            </div>
+          </div>
+        </div>
+        <div class="testi reveal" role="listitem">
+          <span class="quote" aria-hidden="true">”</span>
+          <p>“A periodização salvou minha temporada. Entrei em palco em condição que não imaginava possível e, mais importante, sem sequela. É preparação séria, não improvisada.”</p>
+          <div class="who">
+            <div class="av" aria-hidden="true">JS</div>
+            <div>
+              <h5>Juliana S.</h5>
+              <span>Atleta amadora · ciclo 2025</span>
+            </div>
+          </div>
+        </div>
+        <div class="testi reveal" role="listitem">
+          <span class="quote" aria-hidden="true">”</span>
+          <p>“Voltei a treinar depois de uma lesão e o trabalho de base me devolveu confiança. Hoje executo movimentos que antes só assistia. Mudou minha relação com treino.”</p>
+          <div class="who">
+            <div class="av" aria-hidden="true">LP</div>
+            <div>
+              <h5>Lucas P.</h5>
+              <span>Engenheiro · 9 meses</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="showcase" role="list">
+        <div class="shot reveal" role="listitem">
+          <span class="num" aria-hidden="true">01</span>
+          <img
+            src="assets/diego-tank.png"
+            width="1085"
+            height="1450"
+            alt="Diego Santos em sessão de força e técnica"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="lab">
+            <strong>Sessão de força</strong>
+            <span>BASE · TÉCNICA</span>
+          </div>
+        </div>
+        <div class="shot reveal" role="listitem">
+          <span class="num" aria-hidden="true">02</span>
+          <img
+            src="assets/diego-running.png"
+            width="1165"
+            height="1350"
+            alt="Treino de condicionamento outdoor com foco em ritmo"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="lab">
+            <strong>Condicionamento</strong>
+            <span>RITMO · ZONA 2</span>
+          </div>
+        </div>
+        <div class="shot reveal" role="listitem">
+          <span class="num" aria-hidden="true">03</span>
+          <img
+            src="assets/diego-bench.png"
+            width="1086"
+            height="1448"
+            alt="Avaliação técnica de postura e diagnóstico de treino"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="lab">
+            <strong>Avaliação técnica</strong>
+            <span>POSTURA · DIAGNÓSTICO</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="sec" data-section>
+    <div class="container">
+      <div class="sec-head" style="margin-bottom:50px">
+        <div class="left">
+          <div class="sec-num">05<em>Perguntas frequentes</em></div>
+          <h2 class="h2" style="margin-top:24px">
+            DÚVIDAS<br />
+            <span class="grad-text">ANTES DE</span><br />
+            COMEÇAR?
+          </h2>
+        </div>
+      </div>
+
+      <div class="faq-grid">
+        <div>
+          <p class="lead">
+            Os pontos que mais surgem antes da primeira conversa. Se a sua
+            dúvida não estiver aqui, fale direto comigo; respondo pessoalmente.
+          </p>
+          <a
+            class="btn btn-ghost"
+            href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20os%20treinos.%20Pode%20me%20ajudar%3F"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="margin-top:30px"
+          >
+            Falar diretamente
+            <span class="arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                <path d="M5 12h14M13 5l7 7-7 7" />
+              </svg>
+            </span>
+          </a>
+        </div>
+
+        <div class="qlist" role="list">
+          <div class="q open" data-faq-item role="listitem">
+            <h3 class="q-h">
+              <button class="q-toggle" type="button" aria-expanded="true" aria-controls="faq-1">
+                <span class="q-text">Você atende presencial ou online?</span>
+                <span class="q-ico" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="q-body" id="faq-1" role="region" aria-labelledby="faq-1-h">
+              <div class="q-body-inner">
+                <p>Atendo nas duas modalidades. O Personal Training é presencial em estúdio parceiro; a Consultoria Especializada acontece 100% online com acompanhamento próximo, ajustes quinzenais e check‑ins por vídeo.</p>
+              </div>
+            </div>
+          </div>
+          <div class="q" data-faq-item role="listitem">
+            <h3 class="q-h">
+              <button class="q-toggle" type="button" aria-expanded="false" aria-controls="faq-2">
+                <span class="q-text">Em quanto tempo vou ver resultado?</span>
+                <span class="q-ico" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="q-body" id="faq-2" role="region" hidden>
+              <div class="q-body-inner">
+                <p>As primeiras mudanças, como mobilidade, energia e técnica, aparecem entre quatro e seis semanas. Mudanças estruturais consistentes começam a partir do terceiro mês, dentro do ciclo periodizado.</p>
+              </div>
+            </div>
+          </div>
+          <div class="q" data-faq-item role="listitem">
+            <h3 class="q-h">
+              <button class="q-toggle" type="button" aria-expanded="false" aria-controls="faq-3">
+                <span class="q-text">Preciso ter experiência em treino?</span>
+                <span class="q-ico" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="q-body" id="faq-3" role="region" hidden>
+              <div class="q-body-inner">
+                <p>Não. O método começa pela base, independente do seu nível, para construir movimento limpo antes de elevar carga. Atendo do iniciante ao atleta competitivo.</p>
+              </div>
+            </div>
+          </div>
+          <div class="q" data-faq-item role="listitem">
+            <h3 class="q-h">
+              <button class="q-toggle" type="button" aria-expanded="false" aria-controls="faq-4">
+                <span class="q-text">Como funciona a avaliação inicial?</span>
+                <span class="q-ico" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="q-body" id="faq-4" role="region" hidden>
+              <div class="q-body-inner">
+                <p>É uma sessão dedicada com anamnese detalhada, avaliação postural, testes de mobilidade e leitura de padrões motores. A partir dela, monto seu plano periodizado.</p>
+              </div>
+            </div>
+          </div>
+          <div class="q" data-faq-item role="listitem">
+            <h3 class="q-h">
+              <button class="q-toggle" type="button" aria-expanded="false" aria-controls="faq-5">
+                <span class="q-text">Você trabalha junto com nutricionista?</span>
+                <span class="q-ico" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="q-body" id="faq-5" role="region" hidden>
+              <div class="q-body-inner">
+                <p>Sim. Trabalho em parceria com nutricionistas de confiança quando o objetivo demanda integração entre treino e estratégia alimentar, especialmente em coaching competitivo.</p>
+              </div>
+            </div>
+          </div>
+          <div class="q" data-faq-item role="listitem">
+            <h3 class="q-h">
+              <button class="q-toggle" type="button" aria-expanded="false" aria-controls="faq-6">
+                <span class="q-text">Como começo?</span>
+                <span class="q-ico" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="q-body" id="faq-6" role="region" hidden>
+              <div class="q-body-inner">
+                <p>Pelo botão "Fale com Diego". Marcamos uma conversa rápida, eu entendo seu momento e te indico o formato ideal, sem pressão e sem compromisso.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="final" data-section>
+    <div class="lines" aria-hidden="true">
+      <b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+    </div>
+    <div class="container">
+      <span class="eyebrow" style="display:block;margin-bottom:30px">Pronto para subir?</span>
+      <h2>
+        <span>SUA PRÓXIMA</span>
+        <span class="accent">VERSÃO</span>
+        <span>COMEÇA HOJE.</span>
+      </h2>
+      <p class="lead" style="margin:0 auto 50px">
+        Vagas limitadas no ciclo atual. Conversamos primeiro, alinhamos
+        objetivo e disponibilidade; depois, montamos sua trilha.
+      </p>
+      <div class="ctas">
+        <a
+          class="btn btn-primary"
+          href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20estou%20pronto%20para%20come%C3%A7ar%20minha%20transforma%C3%A7%C3%A3o.%20Como%20damos%20o%20pr%C3%B3ximo%20passo%3F"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Comece sua transformação
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
+          </span>
+        </a>
+        <a
+          class="btn btn-ghost"
+          href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20diretamente%20com%20voc%C3%AA%20sobre%20acompanhamento."
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Fale com Diego
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <footer class="footer" aria-labelledby="footer-heading">
+    <h2 id="footer-heading" class="visually-hidden">Rodapé</h2>
+
+    <div class="footer-glow" aria-hidden="true"></div>
+
+    <div class="container footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#topo" class="footer-logo" aria-label="Voltar ao topo">
+            <img
+              src="assets/logo-mark.png"
+              width="1024"
+              height="1024"
+              alt="Marca DS de Diego Santos"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="footer-brand-text">
+              <span class="footer-brand-name">Diego<i aria-hidden="true">·</i>Santos</span>
+              <small>Personal Trainer · CREF Ativo</small>
+            </div>
+          </a>
+          <p class="footer-mission">
+            Treinamento de alta performance, técnica refinada e progressão
+            intencional para quem trata o próprio corpo como projeto de longo prazo.
+          </p>
+          <ul class="footer-pillars" aria-hidden="true">
+            <li>Montanha</li>
+            <li>Progressão</li>
+            <li>Movimento</li>
+          </ul>
+        </div>
+
+        <nav class="footer-cols" aria-label="Mapa do site">
+          <div class="footer-col">
+            <h3>Navegação</h3>
+            <ul>
+              <li><a href="#historia">História</a></li>
+              <li><a href="#metodo">Método</a></li>
+              <li><a href="#servicos">Serviços</a></li>
+              <li><a href="#resultados">Resultados</a></li>
+              <li><a href="#faq">FAQ</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Serviços</h3>
+            <ul>
+              <li><a href="#servicos">Consultoria especializada</a></li>
+              <li><a href="#servicos">Personal training</a></li>
+              <li><a href="#servicos">Coaching competitivo</a></li>
+            </ul>
+          </div>
+          <div class="footer-col footer-col-contact">
+            <h3>Contato direto</h3>
+            <ul>
+              <li>
+                <span class="footer-contact-label">WhatsApp</span>
+                <a href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20com%20voc%C3%AA%20sobre%20os%20treinos." target="_blank" rel="noopener noreferrer">+55 75 9202-2059</a>
+              </li>
+              <li>
+                <span class="footer-contact-label">E-mail</span>
+                <a href="mailto:contato@diegosantos.fit">contato@diegosantos.fit</a>
+              </li>
+              <li>
+                <span class="footer-contact-label">Instagram</span>
+                <a href="https://www.instagram.com/santos__diegooo/" target="_blank" rel="noopener noreferrer">@santos__diegooo</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="footer-ribbon" aria-hidden="true">
+        <span>Disciplina</span>
+        <i>◆</i>
+        <span>Técnica</span>
+        <i>◆</i>
+        <span>Performance</span>
+        <i>◆</i>
+        <span>Constância</span>
+      </div>
+
+      <div class="footer-bot">
+        <small class="footer-copy">© 2026 Diego Santos · Todos os direitos reservados.</small>
+
+        <ul class="footer-social" aria-label="Redes sociais e contato">
+          <li>
+            <a
+              href="https://www.instagram.com/santos__diegooo/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s0 3.6-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.81 3.81 0 0 1-1.38-.9 3.81 3.81 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.21 15.6 2.2 15.2 2.2 12s0-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2zm0-2.2C8.74 0 8.33 0 7.05.06 5.78.12 4.9.32 4.14.61c-.79.3-1.46.71-2.13 1.38A5.84 5.84 0 0 0 .61 4.14C.32 4.9.12 5.78.06 7.05 0 8.33 0 8.74 0 12s0 3.67.06 4.95c.06 1.27.26 2.15.55 2.91.3.79.71 1.46 1.38 2.13.67.67 1.34 1.08 2.13 1.38.76.29 1.64.49 2.91.55C8.33 24 8.74 24 12 24s3.67 0 4.95-.06c1.27-.06 2.15-.26 2.91-.55a5.84 5.84 0 0 0 2.13-1.38 5.84 5.84 0 0 0 1.38-2.13c.29-.76.49-1.64.55-2.91.06-1.28.06-1.69.06-4.95s0-3.67-.06-4.95c-.06-1.27-.26-2.15-.55-2.91a5.84 5.84 0 0 0-1.38-2.13A5.84 5.84 0 0 0 19.86.61c-.76-.29-1.64-.49-2.91-.55C15.67 0 15.26 0 12 0z"/>
+                <path d="M12 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+                <circle cx="18.41" cy="5.59" r="1.44"/>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20com%20voc%C3%AA%20sobre%20os%20treinos."
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.465 3.488"/>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="mailto:contato@diegosantos.fit" aria-label="E-mail">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/>
+              </svg>
+            </a>
+          </li>
+        </ul>
+
+        <a class="footer-totop" href="#topo">
+          Voltar ao topo
+          <span class="footer-totop-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <a
+    class="fab-whatsapp"
+    href="https://wa.me/557592022059?text=Ol%C3%A1%2C%20Diego!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20com%20voc%C3%AA%20sobre%20os%20treinos."
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Falar com Diego no WhatsApp"
+  >
+    <span class="fab-whatsapp-pulse" aria-hidden="true"></span>
+    <span class="fab-whatsapp-ring" aria-hidden="true"></span>
+    <svg
+      class="fab-whatsapp-icon"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.465 3.488"/>
+    </svg>
+  </a>
+
+</body>
+</html>

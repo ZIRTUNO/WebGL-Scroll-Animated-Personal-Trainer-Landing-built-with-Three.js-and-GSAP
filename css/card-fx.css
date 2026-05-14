@@ -1,0 +1,78 @@
+.fx-card {
+  --fx-x: 50%;
+  --fx-y: 0%;
+  --fx-opacity: 0;
+  --fx-ring: rgba(139, 92, 246, .18);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+:where(.svc, .testi, .shot).fx-card {
+  transition:
+    transform .55s var(--ease-out),
+    border-color .45s var(--ease-out),
+    box-shadow .55s var(--ease-out),
+    background .55s var(--ease-out);
+}
+
+:where(.svc, .testi, .shot).is-card-active,
+:where(.svc, .testi, .shot):hover {
+  border-color: rgba(139, 92, 246, .48);
+  box-shadow:
+    0 24px 70px -34px rgba(96, 165, 250, .55),
+    0 12px 42px -30px rgba(139, 92, 246, .9),
+    inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.svc::after {
+  background:
+    radial-gradient(46% 42% at var(--fx-x) var(--fx-y), rgba(139, 92, 246, .26), transparent 62%),
+    radial-gradient(32% 34% at var(--fx-x) var(--fx-y), rgba(96, 165, 250, .18), transparent 70%);
+  opacity: var(--fx-opacity, 0);
+}
+
+.svc:hover::after { opacity: .82; }
+
+.svc.is-card-active::after { opacity: var(--fx-opacity, .82); }
+
+.testi::before,
+.shot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(48% 48% at var(--fx-x) var(--fx-y), rgba(139, 92, 246, .22), transparent 64%),
+    linear-gradient(135deg, rgba(96, 165, 250, .07), transparent 44%);
+  opacity: var(--fx-opacity, 0);
+  transition: opacity .5s var(--ease-out);
+}
+
+.testi:hover::before,
+.shot:hover::before { opacity: .72; }
+
+.testi.is-card-active::before,
+.shot.is-card-active::before { opacity: var(--fx-opacity, .72); }
+
+.testi > *,
+.shot > * {
+  position: relative;
+  z-index: 1;
+}
+
+.shot::before {
+  mix-blend-mode: screen;
+  z-index: 2;
+}
+
+.shot img {
+  will-change: transform;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .fx-card {
+    transform: none !important;
+    will-change: auto;
+  }
+}

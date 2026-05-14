@@ -1,0 +1,96 @@
+.fab-whatsapp {
+  position: fixed;
+  bottom: clamp(18px, 4vw, 28px);
+  right: clamp(18px, 4vw, 28px);
+  z-index: 70;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--grad);
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  color: #fff;
+  text-decoration: none;
+  isolation: isolate;
+  box-shadow:
+    0 14px 32px -10px rgba(94, 44, 165, .65),
+    0 6px 18px -8px rgba(37, 99, 235, .55),
+    inset 0 1px 0 rgba(255, 255, 255, .18);
+  transition:
+    transform .4s var(--ease-out),
+    box-shadow .4s var(--ease-out),
+    background-position .8s var(--ease-out);
+  animation: fab-float 5.5s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .fab-whatsapp { display: inline-flex; }
+}
+
+.fab-whatsapp:hover,
+.fab-whatsapp:focus-visible {
+  transform: translateY(-3px) scale(1.05);
+  background-position: 100% 50%;
+  box-shadow:
+    0 22px 50px -12px rgba(94, 44, 165, .8),
+    0 10px 26px -8px rgba(37, 99, 235, .65),
+    inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+
+.fab-whatsapp:active {
+  transform: translateY(-1px) scale(.98);
+}
+
+.fab-whatsapp-icon {
+  position: relative;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35));
+}
+
+.fab-whatsapp-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: var(--grad);
+  opacity: .55;
+  z-index: 1;
+  animation: fab-pulse 2.4s var(--ease-out) infinite;
+  pointer-events: none;
+}
+
+.fab-whatsapp-ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  background: var(--grad);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  padding: 1px;
+  opacity: .9;
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes fab-pulse {
+  0%   { transform: scale(1);    opacity: .55; }
+  70%  { transform: scale(1.55); opacity: 0; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+@keyframes fab-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fab-whatsapp,
+  .fab-whatsapp-pulse {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,168 @@
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 1024px) {
+  .services-grid { grid-template-columns: 1fr; }
+}
+
+.svc {
+  position: relative;
+  padding: 40px 32px 36px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(10, 10, 20, .6), rgba(10, 10, 20, .2));
+  overflow: hidden;
+  transition: transform .6s var(--ease);
+}
+.svc:hover { transform: translateY(-8px); }
+
+.svc::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, .3), rgba(96, 165, 250, .1) 50%, rgba(139, 92, 246, .3));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  transition: opacity .6s, background .6s;
+}
+.svc:hover::before { background: var(--grad); opacity: 1; }
+
+.svc::after {
+  content: "";
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(40% 40% at 50% 50%, rgba(139, 92, 246, .18), transparent 60%);
+  opacity: 0;
+  transition: opacity .6s;
+  pointer-events: none;
+}
+.svc:hover::after { opacity: 1; }
+
+.svc .ic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(139, 92, 246, .15), rgba(37, 99, 235, .15));
+  border: 1px solid var(--c-line);
+  position: relative;
+  z-index: 1;
+}
+.svc .ic svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--c-white);
+  fill: none;
+  stroke-width: 1.5;
+  transition: transform .6s var(--ease);
+}
+.svc:hover .ic svg { transform: rotate(-8deg) scale(1.1); }
+
+.svc .label {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  font-size: 10px;
+  letter-spacing: .4em;
+  color: rgba(139, 92, 246, .7);
+  text-transform: uppercase;
+}
+
+.svc h3 {
+  margin: 32px 0 16px;
+  line-height: 1.1;
+  position: relative;
+  z-index: 1;
+}
+.svc p {
+  font-size: 13px;
+  color: rgba(242, 244, 248, .65);
+  font-weight: 300;
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
+}
+
+.svc ul {
+  list-style: none;
+  margin: 24px 0 32px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+.svc ul li {
+  font-size: 12px;
+  color: rgba(242, 244, 248, .7);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 300;
+}
+.svc ul li::before {
+  content: "";
+  width: 14px;
+  height: 1px;
+  background: var(--c-purple);
+}
+
+.svc .more {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--c-white);
+  padding-top: 18px;
+  border-top: 1px solid var(--c-line);
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  transition: color .4s;
+}
+.svc:hover .more { color: var(--c-sky); }
+.svc .more svg { width: 14px; height: 14px; transition: transform .4s; }
+.svc:hover .more svg { transform: translateX(6px); }
+
+@media (max-width: 560px) {
+  .svc {
+    padding: 30px 22px 28px;
+  }
+
+  .svc .ic {
+    width: 54px;
+    height: 54px;
+  }
+
+  .svc .label {
+    position: static;
+    display: block;
+    margin-top: 18px;
+    font-size: 9px;
+    letter-spacing: .26em;
+    line-height: 1.5;
+  }
+
+  .svc h3 {
+    margin: 22px 0 12px;
+    font-size: 16px;
+    letter-spacing: .18em;
+  }
+
+  .svc .more {
+    letter-spacing: .24em;
+  }
+}

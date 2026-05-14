@@ -1,0 +1,85 @@
+[data-section] {
+  position: relative;
+}
+[data-section]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, .4), rgba(96, 165, 250, .4), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.4s var(--ease-out) .2s;
+  pointer-events: none;
+}
+[data-section].in::after { transform: scaleX(1); }
+body.is-anchor-scrolling [data-section]::after {
+  transition: none;
+}
+
+@keyframes highlightGradientFlow {
+  from { background-position: 0 50%; }
+  to { background-position: calc(-1 * var(--highlight-tile)) 50%; }
+}
+
+.grad-text,
+.final h2 .accent {
+  --highlight-tile: clamp(360px, 46vw, 720px);
+  background-image: var(--grad-text-flow) !important;
+  background-size: var(--highlight-tile) 100% !important;
+  background-position: 0 50%;
+  background-repeat: repeat-x;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  animation: highlightGradientFlow 10.5s linear infinite !important;
+  will-change: background-position;
+}
+
+.hero h1 .l span.grad-text {
+  animation:
+    rise 1s var(--ease) .12s forwards,
+    highlightGradientFlow 10.5s linear infinite !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grad-text,
+  .final h2 .accent {
+    animation-duration: 10.5s !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  .hero h1 .l span.grad-text {
+    animation: highlightGradientFlow 10.5s linear infinite !important;
+  }
+}
+
+.story-card { transition: transform .5s var(--ease-out), border-color .5s; }
+.story-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0), rgba(96, 165, 250, 0));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  transition: background .6s;
+}
+.story-card:hover::before {
+  background: linear-gradient(135deg, rgba(139, 92, 246, .7), rgba(96, 165, 250, .7));
+}
+.story-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 60% at 50% 0%, rgba(139, 92, 246, .18), transparent 60%);
+  opacity: 0;
+  transition: opacity .6s;
+  pointer-events: none;
+}
+.story-card:hover::after { opacity: 1; }

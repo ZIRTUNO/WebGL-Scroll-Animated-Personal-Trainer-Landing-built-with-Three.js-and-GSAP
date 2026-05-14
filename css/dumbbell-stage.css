@@ -1,0 +1,16 @@
+#dumbbell-stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+}
+
+#dumbbell-stage canvas {
+  width: 100% !important;
+  height: 100% !important;
+  filter: drop-shadow(0 14px 22px rgba(94, 44, 165, .28));
+}

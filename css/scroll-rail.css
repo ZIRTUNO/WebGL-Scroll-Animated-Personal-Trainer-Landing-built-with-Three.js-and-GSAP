@@ -1,0 +1,28 @@
+.scroll-rail {
+  position: fixed;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.scroll-rail .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(242, 244, 248, .2);
+  transition: all .3s;
+}
+.scroll-rail .dot.active {
+  background: var(--grad);
+  box-shadow: 0 0 12px var(--c-purple);
+  transform: scale(1.6);
+}
+
+@media (max-width: 768px) {
+  .scroll-rail { display: none; }
+}
