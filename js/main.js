@@ -7,6 +7,7 @@ import { initSectionNavigation } from './navigation.js';
 import { initCardFx } from './card-fx.js';
 import { initNativeScrollSync } from './scroll-sync.js';
 import { initNavMenu } from './nav-menu.js';
+import { initFocusModality } from './focus-modality.js';
 
 const GSAP_TIMEOUT_MS = 2500;
 
@@ -24,6 +25,7 @@ async function awaitGsap(timeoutMs = GSAP_TIMEOUT_MS) {
 }
 
 async function boot() {
+  initFocusModality();
   initSectionNavigation();
   const gsapReady = await awaitGsap();
 

@@ -401,7 +401,7 @@ header.hero {
 
 @media (max-width: 560px) {
   .hero {
-    --hero-nav-clearance: var(--nav-offset);
+    --hero-nav-clearance: 92px;
     --dumbbell-slot: clamp(128px, 18svh, 156px);
     --headline-gap: 10px;
     --support-gap: 22px;

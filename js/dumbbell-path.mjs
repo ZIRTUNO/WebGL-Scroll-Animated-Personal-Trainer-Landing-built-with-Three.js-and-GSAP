@@ -21,12 +21,13 @@ const PRESETS = Object.freeze({
       start: { x: 0, y: 1.34, z: 0.04 },
       dock: { x: 0, y: 0.16, z: -0.02 },
     },
-    scale: 0.58,
-    dockScale: 0.14,
-    dockLift: 0.012,
+    scale: 0.72,
+    dockScale: 0.17,
+    dockLift: 0,
     shrinkStart: 0.24,
-    finalRotationZ: 0,
+    finalRotationZ: FINAL_SCREEN_ROTATION_Z,
     orbit: 0.34,
+    viewDrop: 0.24,
     zBehind: -0.14,
     zFront: 0.2,
   },
@@ -39,10 +40,11 @@ const PRESETS = Object.freeze({
       start: { x: 0, y: 1.55, z: 0.05 },
       dock: { x: 0.42, y: 0.56, z: -0.02 },
     },
-    scale: 1.06,
-    dockScale: 0.13,
-    dockLift: 0.014,
+    scale: 1.26,
+    dockScale: 0.16,
+    dockLift: 0,
     orbit: 0.44,
+    viewDrop: 0.5,
     zBehind: -0.16,
     zFront: 0.24,
   },
@@ -55,10 +57,11 @@ const PRESETS = Object.freeze({
       start: { x: 0, y: 1.78, z: 0.06 },
       dock: { x: 0.64, y: 0.44, z: -0.02 },
     },
-    scale: 1.48,
-    dockScale: 0.12,
-    dockLift: 0.016,
+    scale: 1.52,
+    dockScale: 0.15,
+    dockLift: 0,
     orbit: 0.56,
+    viewDrop: 0.78,
     zBehind: -0.18,
     zFront: 0.28,
   },
@@ -91,6 +94,7 @@ export function getDumbbellResponsiveParams(width, height) {
       : FINAL_SCREEN_ROTATION_Z,
     shrinkStart: Number.isFinite(preset.shrinkStart) ? preset.shrinkStart : 0.62,
     orbit: preset.orbit,
+    viewDrop: preset.viewDrop,
     zBehind: preset.zBehind,
     zFront: preset.zFront,
   };
@@ -138,6 +142,7 @@ function resolveAnchors(params, anchors) {
 
 function buildPathPoints(start, dock, params) {
   const orbit = Number.isFinite(params.orbit) ? params.orbit : 0.42;
+  const viewDrop = Number.isFinite(params.viewDrop) ? params.viewDrop : 0;
   const zBehind = Number.isFinite(params.zBehind) ? params.zBehind : -0.14;
   const zFront = Number.isFinite(params.zFront) ? params.zFront : 0.22;
   const direction = dock.x >= start.x ? 1 : -1;
@@ -147,25 +152,25 @@ function buildPathPoints(start, dock, params) {
     {
       t: DUMBBELL_PHASES.suba,
       x: lerp(start.x, dock.x, 0.16) - direction * orbit * 0.55,
-      y: lerp(start.y, dock.y, 0.2),
+      y: lerp(start.y, dock.y, 0.2) - viewDrop * 0.45,
       z: zBehind,
     },
     {
       t: DUMBBELL_PHASES.proximo,
       x: lerp(start.x, dock.x, 0.38) + direction * orbit * 0.72,
-      y: lerp(start.y, dock.y, 0.43),
+      y: lerp(start.y, dock.y, 0.43) - viewDrop * 0.95,
       z: zBehind * 1.1,
     },
     {
       t: DUMBBELL_PHASES.patamar,
       x: lerp(start.x, dock.x, 0.64) + direction * orbit * 0.28,
-      y: lerp(start.y, dock.y, 0.66),
+      y: lerp(start.y, dock.y, 0.66) - viewDrop * 0.78,
       z: zFront,
     },
     {
       t: DUMBBELL_PHASES.image,
       x: lerp(start.x, dock.x, 0.86) - direction * orbit * 0.2,
-      y: lerp(start.y, dock.y, 0.84),
+      y: lerp(start.y, dock.y, 0.84) - viewDrop * 0.42,
       z: zBehind * 0.65,
     },
     { t: 1, ...dock },

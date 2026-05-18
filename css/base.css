@@ -166,8 +166,10 @@ h1, h2, h3, p, a, button, span {
   transition: transform var(--dur-fast) var(--ease-out);
 }
 .skip-link:focus-visible {
-  transform: translateY(0);
   outline: none;
+}
+html.is-keyboard-modality .skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 :where(a, button, .btn, .q-toggle, .nav ul a, .cta-mini, .more, .ftop ul a):focus-visible {

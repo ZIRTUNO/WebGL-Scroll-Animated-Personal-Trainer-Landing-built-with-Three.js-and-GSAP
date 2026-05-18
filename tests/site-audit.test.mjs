@@ -29,6 +29,9 @@ const cardFxCss = fs.readFileSync('css/card-fx.css', 'utf8');
 const scrollRailJs = fs.readFileSync('js/scroll-rail.js', 'utf8');
 const navigationJs = fs.readFileSync('js/navigation.js', 'utf8');
 const navMenuJs = fs.readFileSync('js/nav-menu.js', 'utf8');
+const focusModalityJs = fs.existsSync('js/focus-modality.js')
+  ? fs.readFileSync('js/focus-modality.js', 'utf8')
+  : '';
 const animationsCss = fs.readFileSync('css/animations.css', 'utf8');
 const dumbbell3dJs = fs.readFileSync('js/dumbbell-3d.js', 'utf8');
 
@@ -156,6 +159,12 @@ for (const href of primaryNavHrefs) {
 }
 assert.match(mainJs, /initSectionNavigation/, 'section navigation module is booted');
 assert.match(mainJs, /initCardFx/, 'interactive card effect module is booted');
+assert.match(mainJs, /initFocusModality/, 'focus modality module is booted before interactive components');
+assert.match(focusModalityJs, /event\.key\s*===\s*'Tab'[\s\S]*is-keyboard-modality/, 'keyboard modality is enabled only by Tab navigation');
+assert.match(focusModalityJs, /classList\.remove\('is-keyboard-modality'\)[\s\S]*pointerdown[\s\S]*clearKeyboardModality/, 'pointer/touch input clears keyboard modality');
+assert.match(baseCss, /html\.is-keyboard-modality\s+\.skip-link:focus-visible\s*\{[\s\S]*transform:\s*translateY\(0\)/, 'skip link only slides into view during real keyboard navigation');
+const skipFocusBlock = baseCss.match(/(?:^|\n)\.skip-link:focus-visible\s*\{([^}]*)\}/)?.[1] || '';
+assert.doesNotMatch(skipFocusBlock, /transform:\s*translateY\(0\)/, 'touch or scroll focus cannot expose the skip link as a purple bar');
 assert.doesNotMatch(html, />\s*SCROLL\s*</i, 'scroll rail text label is removed');
 assert.doesNotMatch(html, /class="v"/i, 'scroll rail no longer includes the vertical text label');
 assert.match(scrollRailJs, /\.nav ul a\[href\^="#"\]/, 'scroll rail tracks the primary navigation sections');
@@ -191,6 +200,13 @@ assert.doesNotMatch(dumbbell3dJs, /ScrollTrigger\.create/, 'dumbbell path is dri
 assert.match(dumbbell3dJs, /function getPageScrollY\(\)[\s\S]*document\.body\?\.scrollTop/, 'dumbbell reads body.scrollTop as a fallback when browsers route wheel input to body');
 assert.match(dumbbell3dJs, /const scrollY\s*=\s*getPageScrollY\(\)/, 'dumbbell render loop uses the normalized page scroll source');
 assert.match(dumbbell3dJs, /function layoutDocumentRect\([\s\S]*offsetParent/, 'dumbbell anchor measurement uses layout coordinates that are independent of reveal transforms');
+assert.match(dumbbell3dJs, /function getResponsiveViewportWidth\(\)[\s\S]*window\.outerWidth/, 'dumbbell responsive sizing uses the unzoomed desktop window width when browser zoom shrinks innerWidth');
+assert.match(dumbbell3dJs, /if \(isFinePointerViewport\(\) && outer > 0\)[\s\S]*return outer/, 'fine-pointer desktop sizing stays tied to the browser window width for both zoom-in and zoom-out');
+assert.match(dumbbell3dJs, /function getZoomCompensationScale\(\)[\s\S]*outer \/ innerWidth[\s\S]*clamp/, 'dumbbell render scale compensates when browser zoom changes CSS viewport pixels');
+assert.match(dumbbell3dJs, /function applyZoomCompensation\([\s\S]*scale:[\s\S]*base\.scale \* zoomScale[\s\S]*dockScale:/, 'dumbbell start and dock scales both use the zoom compensation');
+assert.match(dumbbell3dJs, /getDumbbellResponsiveParams\(getResponsiveViewportWidth\(\),\s*innerHeight\)/, 'dumbbell presets are selected from the zoom-stable responsive width');
+assert.match(dumbbell3dJs, /function applyCameraDepth\(\)[\s\S]*getResponsiveViewportWidth\(\)/, 'dumbbell camera depth follows the zoom-stable responsive width');
+assert.doesNotMatch(dumbbell3dJs, /getDumbbellResponsiveParams\(innerWidth,\s*innerHeight\)/, 'dumbbell presets no longer collapse from desktop to mobile during browser zoom');
 assert.doesNotMatch(dumbbell3dJs, /computeProgressFromScroll|computeDocumentAttachedWorldPosition|heroBottom/, 'dumbbell does not maintain a second manual scroll timeline that can disagree with ScrollTrigger');
 assert.match(html, /class="story-dumbbell-dock"/, 'story section exposes a stable dumbbell dock marker');
 assert.match(storyCss, /\.story-dumbbell-dock\s*\{[\s\S]*display:\s*inline-block/, 'story dumbbell dock marker has measurable layout');
@@ -203,7 +219,7 @@ assert.match(dumbbell3dJs, /event\.ctrlKey[\s\S]*scheduleLayoutRefresh/, 'Ctrl+w
 assert.doesNotMatch(dumbbell3dJs, /visualViewport\?\.addEventListener\('scroll'[\s\S]*requestLayoutRefresh/, 'ordinary visual viewport scrolling does not recalculate the dumbbell path');
 assert.doesNotMatch(dumbbell3dJs, /innerWidth\s*<\s*760[\s\S]{0,220}#historia \.sec-num/, 'mobile dumbbell does not dock to the story number/heading band');
 assert.match(dumbbell3dJs, /#historia \.story-img/, 'story image remains only as a fallback when the explicit dock marker is missing');
-assert.match(storyCss, /\.story-dumbbell-dock\s*\{[\s\S]*margin-left:\s*clamp\(12px,\s*2vw,\s*28px\)/, 'story dock marker sits closer to the eyebrow text across desktop, tablet, and mobile');
+assert.match(storyCss, /\.story-dumbbell-dock\s*\{[\s\S]*margin-left:\s*clamp\(4px,\s*\.65vw,\s*10px\)/, 'story dock marker stays tight to the Quem e Diego eyebrow across desktop, tablet, and mobile');
 assert.match(navigationJs, /smoothScrollTo/, 'navigation routes section links through the shared smooth scroll helper');
 assert.match(navCss, /aria-current="true"[\s\S]*linear-gradient|\.nav ul a\.is-active[\s\S]*linear-gradient/i, 'nav has a gradient active or hover treatment');
 assert.match(navCss, /color:\s*rgba\(242,\s*244,\s*248,\s*\.9[0-9]\)/, 'nav inactive text is stronger and whiter');
@@ -250,6 +266,7 @@ assert.match(scrollRailCss, /\.scroll-rail \.dot\.active::before\s*\{[\s\S]*back
 assert.doesNotMatch(scrollRailCss, /\.scroll-rail \.dot\.active\s*\{[^}]*background:\s*var\(--grad\)/, 'scroll rail active dot does not paint the transformed circle itself');
 assert.match(baseCss, /h1,\s*h2,\s*h3,\s*h4\s*\{[\s\S]*line-height:\s*1\.04/, 'global display headings reserve room for accents and descenders');
 assert.match(heroCss, /\.hero h1 \.l\s*\{[\s\S]*padding-block:\s*\.12em \.16em[\s\S]*margin-block:\s*-\.12em -\.16em/, 'hero reveal lines keep overflow while preserving accent room');
+assert.match(heroCss, /@media\s*\(max-width:\s*560px\)[\s\S]*--hero-nav-clearance:\s*92px/, 'mobile hero brings the dumbbell closer to the header without changing desktop spacing');
 assert.match(finalCss, /\.final h2\s*\{[\s\S]*line-height:\s*1\.04/, 'final CTA heading does not clip accents or bottom punctuation');
 assert.match(scrollFx, /outer\.style\.paddingBlock\s*=\s*'0\.14em 0\.18em'/, 'split heading reveal wrappers include vertical breathing room');
 assert.match(scrollFx, /outer\.style\.marginBlock\s*=\s*'-0\.14em -0\.18em'/, 'split heading reveal wrappers compensate added breathing room without layout jumps');

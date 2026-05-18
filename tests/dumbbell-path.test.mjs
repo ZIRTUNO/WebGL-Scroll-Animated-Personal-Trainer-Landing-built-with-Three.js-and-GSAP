@@ -31,6 +31,8 @@ const mobile = getDumbbellResponsiveParams(390, 844);
 
 assert.ok(desktop.scale > tablet.scale, 'desktop starts larger than tablet');
 assert.ok(tablet.scale > mobile.scale, 'tablet starts larger than mobile');
+assert.ok(desktop.scale >= 1.5 && tablet.scale >= 1.24 && mobile.scale >= 0.7, 'dumbbell scales are intentionally larger across desktop, tablet, and mobile');
+assert.ok(desktop.scale <= 1.56, 'desktop start scale stays within the enlarged non-clipping range');
 assert.ok(desktop.dockScale < desktop.scale, 'desktop docks smaller than its hero size');
 assert.ok(mobile.dockScale < mobile.scale, 'mobile docks smaller than its hero size');
 
@@ -63,10 +65,10 @@ assert.ok(
   desktop.screen.dock.x > 0.52 && desktop.screen.dock.y > 0.22 && desktop.screen.dock.y < 0.3,
   'desktop dock target sits next to the story eyebrow and above the headline',
 );
-assert.ok(desktop.dockScale <= 0.14, 'desktop docked dumbbell is a small accent, not a headline overlay');
+assert.ok(desktop.dockScale >= 0.145 && desktop.dockScale <= 0.16, 'desktop docked dumbbell is larger but still a story eyebrow accent');
 assert.ok(
-  desktop.dockLift >= 0 && desktop.dockLift <= 0.022,
-  'desktop docked dumbbell stays close to the explicit blue-reference story marker',
+  desktop.dockLift === 0 && tablet.dockLift === 0 && mobile.dockLift === 0,
+  'docked dumbbell centers exactly on the inline Quem e Diego marker instead of floating above it',
 );
 
 const desktopFinal = getDumbbellPose(1, desktop);
@@ -101,6 +103,24 @@ assertVector(
   'measured final dock anchor',
 );
 
+const desktopTopBandAnchors = {
+  start: { x: 0, y: 1.28, z: 0.06 },
+  dock: { x: 0.68, y: 1.2, z: -0.02 },
+};
+const desktopMidPath = [
+  getDumbbellPose(0.18, desktop, desktopTopBandAnchors).position,
+  getDumbbellPose(0.38, desktop, desktopTopBandAnchors).position,
+  getDumbbellPose(0.58, desktop, desktopTopBandAnchors).position,
+];
+assert.ok(
+  desktopMidPath.every((point) => point.y < desktopTopBandAnchors.start.y - 0.28),
+  'desktop path drops below the top hero band so the full-size rotating dumbbell is not clipped by the header',
+);
+assert.ok(
+  Math.min(...desktopMidPath.map((point) => point.y)) < desktopTopBandAnchors.start.y - 0.58,
+  'desktop path has a clear lower viewing lane through the middle of the animation',
+);
+
 const mobileStart = getDumbbellPose(0, mobile).position;
 const mobileDock = getDumbbellPose(1, mobile).position;
 assert.ok(
@@ -109,9 +129,9 @@ assert.ok(
 );
 approx(
   normalizeAngle(getDumbbellPose(1, mobile).rotation.z),
-  0,
+  FINAL_SCREEN_ROTATION_Z,
   1e-4,
-  'mobile final screen-plane rotation settles horizontal, not as a vertical sliver over text',
+  'mobile final screen-plane rotation docks vertical beside the Quem e Diego marker',
 );
 assert.ok(getDumbbellVisibility(0.06, mobile) > 0.9, 'mobile dumbbell is visible in the reserved hero slot');
 assert.equal(getDumbbellVisibility(0.42, mobile), 1, 'mobile dumbbell stays visible through the full path');

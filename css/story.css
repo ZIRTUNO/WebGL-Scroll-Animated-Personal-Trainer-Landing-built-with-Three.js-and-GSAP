@@ -11,7 +11,7 @@
   display: inline-block;
   width: 1px;
   height: 1px;
-  margin-left: clamp(12px, 2vw, 28px);
+  margin-left: clamp(4px, .65vw, 10px);
   vertical-align: middle;
   pointer-events: none;
 }

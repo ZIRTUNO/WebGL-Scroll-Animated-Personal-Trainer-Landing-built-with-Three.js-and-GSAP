@@ -11,7 +11,7 @@ export function initDumbbell3D() {
   const stage = document.getElementById('dumbbell-stage');
   if (!stage) return;
 
-  const isMobile = innerWidth < 760;
+  const isMobile = getResponsiveViewportWidth() < 760;
   const anisotropy = isMobile ? 2 : 4;
 
   // --- Renderer / scene / camera ---
@@ -54,7 +54,7 @@ export function initDumbbell3D() {
   // changes (width resize, fonts ready, model load, orientation change). They are NOT
   // recomputed during scroll. iOS URL bar / pinch / on-screen keyboard cannot trigger
   // a refresh storm because nothing listens for those events.
-  let params = getDumbbellResponsiveParams(innerWidth, innerHeight);
+  let params = applyZoomCompensation(getDumbbellResponsiveParams(getResponsiveViewportWidth(), innerHeight));
   let anchors = null;            // { start: world, dock: world, screen: { start, dock } }
   let scrollStart = 0;           // page scroll at which animation begins (top of #topo)
   let scrollEnd = innerHeight;   // page scroll at which animation lands at dock
@@ -216,7 +216,7 @@ export function initDumbbell3D() {
   }
 
   function recomputeLayout() {
-    params = getDumbbellResponsiveParams(innerWidth, innerHeight);
+    params = applyZoomCompensation(getDumbbellResponsiveParams(getResponsiveViewportWidth(), innerHeight));
 
     const heroTrigger = document.getElementById('topo');
     scrollStart = heroTrigger ? Math.max(0, documentRect(heroTrigger).top) : 0;
@@ -243,14 +243,46 @@ export function initDumbbell3D() {
   }
 
   function applyCameraDepth() {
-    if (innerWidth < 760) camera.position.z = 10.7;
-    else if (innerWidth < 1080) camera.position.z = 9.8;
+    const responsiveWidth = getResponsiveViewportWidth();
+    if (responsiveWidth < 760) camera.position.z = 10.7;
+    else if (responsiveWidth < 1080) camera.position.z = 9.8;
     else camera.position.z = 9;
   }
 
   function getCappedDpr() {
-    const cap = innerWidth < 760 ? 1.25 : 1.5;
+    const cap = getResponsiveViewportWidth() < 760 ? 1.25 : 1.5;
     return Math.min(window.devicePixelRatio || 1, cap);
+  }
+
+  function getResponsiveViewportWidth() {
+    const outer = Number.isFinite(window.outerWidth) ? window.outerWidth : 0;
+    if (isFinePointerViewport() && outer > 0) {
+      return outer;
+    }
+    return innerWidth;
+  }
+
+  function applyZoomCompensation(base) {
+    const zoomScale = getZoomCompensationScale();
+    return {
+      ...base,
+      scale: base.scale * zoomScale,
+      dockScale: base.dockScale * zoomScale,
+    };
+  }
+
+  function getZoomCompensationScale() {
+    const outer = Number.isFinite(window.outerWidth) ? window.outerWidth : 0;
+    if (!isFinePointerViewport() || outer <= 0 || innerWidth <= 0) return 1;
+
+    const ratio = outer / innerWidth;
+    if (ratio < 0.98) return THREE.MathUtils.clamp(ratio, 0.72, 1);
+    if (ratio > 1.02) return THREE.MathUtils.clamp(Math.sqrt(ratio), 1, 1.18);
+    return 1;
+  }
+
+  function isFinePointerViewport() {
+    return window.matchMedia?.('(hover: hover) and (pointer: fine)')?.matches === true;
   }
 
   function getViewportSignature() {
@@ -258,6 +290,7 @@ export function initDumbbell3D() {
     return [
       window.innerWidth,
       window.innerHeight,
+      getResponsiveViewportWidth(),
       window.devicePixelRatio || 1,
       visualViewport?.width || 0,
       visualViewport?.height || 0,
