@@ -1,7 +1,5 @@
 /* eslint-env browser */
 
-import { getLenis } from './scroll-smoother.js';
-
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const DESKTOP_QUERY = window.matchMedia('(min-width: 1025px)');
 
@@ -30,9 +28,6 @@ export function initNavMenu() {
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-label', 'Fechar menu');
     document.body.classList.add('nav-open');
-
-    const lenis = getLenis();
-    if (lenis && typeof lenis.stop === 'function') lenis.stop();
 
     if (REDUCED_MOTION || !window.gsap) {
       items.forEach((li) => { li.style.opacity = '1'; });
@@ -69,9 +64,6 @@ export function initNavMenu() {
     toggle.setAttribute('aria-label', 'Abrir menu');
     overlay.classList.remove('is-open');
     document.body.classList.remove('nav-open');
-
-    const lenis = getLenis();
-    if (lenis && typeof lenis.start === 'function') lenis.start();
 
     const finishHide = () => {
       overlay.setAttribute('hidden', '');

@@ -145,6 +145,8 @@ function splitLines(el) {
     outer.className = 'line';
     outer.style.display = 'block';
     outer.style.overflow = 'hidden';
+    outer.style.paddingBlock = '0.14em 0.18em';
+    outer.style.marginBlock = '-0.14em -0.18em';
     const inner = document.createElement('span');
     inner.className = 'line-i';
     inner.style.display = 'inline-block';
@@ -189,6 +191,8 @@ function splitExplicitBreaks(el) {
     outer.className = 'line';
     outer.style.display = 'block';
     outer.style.overflow = 'hidden';
+    outer.style.paddingBlock = '0.14em 0.18em';
+    outer.style.marginBlock = '-0.14em -0.18em';
 
     const inner = document.createElement('span');
     inner.className = 'line-i';

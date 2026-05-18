@@ -5,26 +5,22 @@ import { getDumbbellPose, getDumbbellResponsiveParams, getDumbbellVisibility } f
 
 const MODEL_URL = 'assets/models/dumbbell/scene.gltf';
 const SUFFIX_RE = /\.(\d{3})$/;
+const RESIZE_DEBOUNCE_MS = 120;
 
 export function initDumbbell3D() {
   const stage = document.getElementById('dumbbell-stage');
   if (!stage) return;
 
-  const gsap = window.gsap;
-  const ScrollTrigger = window.ScrollTrigger;
-  if (!gsap || !ScrollTrigger) return;
-  gsap.registerPlugin(ScrollTrigger);
-
   const isMobile = innerWidth < 760;
-  const dprCap = isMobile ? 1.25 : 1.5;
   const anisotropy = isMobile ? 2 : 4;
 
+  // --- Renderer / scene / camera ---
   const renderer = new THREE.WebGLRenderer({
     alpha: true,
     antialias: !isMobile,
     powerPreference: 'high-performance',
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, dprCap));
+  renderer.setPixelRatio(getCappedDpr());
   renderer.setSize(innerWidth, innerHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
@@ -53,32 +49,32 @@ export function initDumbbell3D() {
   const pivot = new THREE.Group();
   scene.add(pivot);
 
+  // --- Cached layout state ---
+  // The whole point of this rewrite: these values are computed ONCE on real layout
+  // changes (width resize, fonts ready, model load, orientation change). They are NOT
+  // recomputed during scroll. iOS URL bar / pinch / on-screen keyboard cannot trigger
+  // a refresh storm because nothing listens for those events.
   let params = getDumbbellResponsiveParams(innerWidth, innerHeight);
-  let anchors = null;
+  let anchors = null;            // { start: world, dock: world, screen: { start, dock } }
+  let scrollStart = 0;           // page scroll at which animation begins (top of #topo)
+  let scrollEnd = innerHeight;   // page scroll at which animation lands at dock
+  let lastViewportSignature = getViewportSignature();
+  let resizeDebounceTimer = 0;
+
   applyCameraDepth();
-  anchors = measureLayoutAnchors(null);
+  recomputeLayout();
 
-  function onResize() {
-    camera.aspect = innerWidth / innerHeight;
-    applyCameraDepth();
-    camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-
-    params = getDumbbellResponsiveParams(innerWidth, innerHeight);
-    anchors = measureLayoutAnchors(scrollTrigger);
-    lastT = -1;
-    ScrollTrigger.refresh();
-  }
-  window.addEventListener('resize', onResize);
-
+  // --- Animation state ---
   const state = { progress: 0, visible: 0 };
-  let scrollTrigger = null;
+  let lastT = -1;
+  let lastVisible = -1;
+  let lastScrollY = -1;
 
+  // --- Model load ---
   new GLTFLoader().load(
     MODEL_URL,
     (gltf) => {
       const root = gltf.scene;
-
       stripDuplicateByName(root);
       stripDuplicateByCentroidGap(root);
 
@@ -106,123 +102,184 @@ export function initDumbbell3D() {
       pivot.add(root);
       pivot.scale.setScalar(params.scale);
       state.visible = 1;
-
-      scrollTrigger = ScrollTrigger.create({
-        trigger: '#topo',
-        start: 'top top',
-        end: () => getScrollEnd(),
-        scrub: 0.6,
-        invalidateOnRefresh: true,
-        onRefresh: (self) => {
-          params = getDumbbellResponsiveParams(innerWidth, innerHeight);
-          anchors = measureLayoutAnchors(self);
-          state.progress = self.progress;
-          lastT = -1;
-        },
-        onUpdate: (self) => {
-          state.progress = self.progress;
-        },
-      });
-      anchors = measureLayoutAnchors(scrollTrigger);
+      lastT = -1;
+      // Re-measure once the model is in the tree (in case parent layout shifted).
+      recomputeLayout();
     },
     undefined,
     () => {},
   );
 
-  const FALLBACK_SHRINK_START = 0.62;
+  // --- Real layout listeners (NOT scroll) ---
+  // Debounced and signature-gated: normal scrolling must not remeasure the path,
+  // but actual viewport / zoom changes must resize the renderer and anchors.
+  window.addEventListener('resize', () => {
+    scheduleLayoutRefresh();
+  }, { passive: true });
 
-  let lastT = -1;
-  let lastVisible = -1;
-  let lastScrollY = -1;
+  window.visualViewport?.addEventListener('resize', () => {
+    scheduleLayoutRefresh();
+  }, { passive: true });
 
-  function shouldRender() {
-    if (Math.abs(state.progress - lastT) > 0.0001) return true;
-    if (Math.abs(state.visible - lastVisible) > 0.005) return true;
-    if (state.progress >= 0.999 && window.scrollY !== lastScrollY) return true;
-    return false;
+  window.addEventListener('wheel', (event) => {
+    if (event.ctrlKey) scheduleLayoutRefresh();
+  }, { passive: true, capture: true });
+
+  window.addEventListener('orientationchange', () => {
+    scheduleLayoutRefresh();
+  }, { passive: true });
+
+  // Fonts can shift dock target / slot positions.
+  window.addEventListener('load', () => {
+    scheduleLayoutRefresh(true);
+  }, { once: true, passive: true });
+
+  document.fonts?.ready?.then(() => scheduleLayoutRefresh(true)).catch(() => {});
+
+  function scheduleLayoutRefresh(immediate = false) {
+    window.clearTimeout(resizeDebounceTimer);
+    const run = () => {
+      if (!immediate && !hasViewportChanged()) return;
+      lastViewportSignature = getViewportSignature();
+      syncRendererToViewport();
+      recomputeLayout();
+      lastT = -1;
+    };
+    if (immediate) {
+      run();
+    } else {
+      resizeDebounceTimer = window.setTimeout(run, RESIZE_DEBOUNCE_MS);
+    }
   }
 
+  // --- The rAF loop. Single source of truth. ---
+  requestAnimationFrame(animate);
+
   function animate() {
-    if (shouldRender()) {
-      const t = state.progress;
-      const pose = getDumbbellPose(t, params, anchors);
-      let { x, y, z } = pose.position;
+    const scrollY = getPageScrollY();
+    const span = scrollEnd - scrollStart;
+    const rawProgress = span > 0 ? (scrollY - scrollStart) / span : 0;
+    state.progress = rawProgress < 0 ? 0 : rawProgress > 1 ? 1 : rawProgress;
 
-      if (scrollTrigger && t >= 0.999) {
-        const overscroll = Math.max(0, window.scrollY - scrollTrigger.end);
-        y += pixelsToWorldY(overscroll, camera, anchors?.dock?.z || 0);
-      }
-
-      pivot.position.set(x, y, z);
-      pivot.rotation.set(pose.rotation.x, pose.rotation.y, pose.rotation.z);
-
-      const shrinkStart = Number.isFinite(params.shrinkStart)
-        ? params.shrinkStart
-        : FALLBACK_SHRINK_START;
-      const shrink = smoothstep01((t - shrinkStart) / (1 - shrinkStart));
-      const dockScale = Number.isFinite(params.dockScale)
-        ? params.dockScale
-        : params.scale * 0.16;
-      pivot.scale.setScalar(THREE.MathUtils.lerp(params.scale, dockScale, shrink));
-
-      stage.style.opacity = (state.visible * getDumbbellVisibility(t, params)).toFixed(3);
-
-      renderer.render(scene, camera);
-
+    if (shouldRender(scrollY)) {
+      renderFrame(state.progress, scrollY);
       lastT = state.progress;
       lastVisible = state.visible;
-      lastScrollY = window.scrollY;
+      lastScrollY = scrollY;
     }
     requestAnimationFrame(animate);
   }
-  requestAnimationFrame(animate);
 
-  const refreshScrollTrigger = () => ScrollTrigger.refresh();
-  if (document.readyState === 'complete') {
-    requestAnimationFrame(refreshScrollTrigger);
-  } else {
-    window.addEventListener('load', refreshScrollTrigger);
+  function shouldRender(scrollY) {
+    if (Math.abs(state.progress - lastT) > 0.0001) return true;
+    if (Math.abs(state.visible - lastVisible) > 0.005) return true;
+    // Past dock: dumbbell follows the page (document-attached), so a scrollY change
+    // means we must re-render even when progress is pinned at 1.
+    if (state.progress >= 0.999 && scrollY !== lastScrollY) return true;
+    return false;
   }
-  document.fonts?.ready?.then(refreshScrollTrigger).catch(() => {});
 
-  function applyCameraDepth() {
-    if (innerWidth < 760) {
-      camera.position.z = 10.7;
-    } else if (innerWidth < 1080) {
-      camera.position.z = 9.8;
-    } else {
-      camera.position.z = 9;
+  function renderFrame(t, scrollY) {
+    const pose = getDumbbellPose(t, params, anchors);
+    let { x, y, z } = pose.position;
+
+    // Document-attached overscroll: once the animation lands at the dock, the dumbbell
+    // moves with the page content instead of being pinned to a viewport y. The dock
+    // anchor was measured at scrollY=scrollEnd; for any scrollY past that, push the
+    // pivot up in world by the equivalent pixels so it tracks the dock target's
+    // document position.
+    if (t >= 0.999 && scrollY > scrollEnd) {
+      const overscroll = scrollY - scrollEnd;
+      y += pixelsToWorldY(overscroll, camera, anchors?.dock?.z || 0);
     }
+
+    pivot.position.set(x, y, z);
+    pivot.rotation.set(pose.rotation.x, pose.rotation.y, pose.rotation.z);
+
+    const shrinkStart = Number.isFinite(params.shrinkStart) ? params.shrinkStart : 0.62;
+    const shrink = smoothstep01((t - shrinkStart) / (1 - shrinkStart));
+    const dockScale = Number.isFinite(params.dockScale) ? params.dockScale : params.scale * 0.16;
+    pivot.scale.setScalar(THREE.MathUtils.lerp(params.scale, dockScale, shrink));
+
+    stage.style.opacity = (state.visible * getDumbbellVisibility(t, params)).toFixed(3);
+
+    renderer.render(scene, camera);
   }
 
-  function measureLayoutAnchors(trigger) {
-    const startScreen = getHeroSlotScreenPoint(trigger);
-    const dockScreen = getDockTargetScreenPoint(trigger);
+  // --- Layout helpers ---
+  function syncRendererToViewport() {
+    camera.aspect = innerWidth / innerHeight;
+    applyCameraDepth();
+    camera.updateProjectionMatrix();
+    renderer.setPixelRatio(getCappedDpr());
+    renderer.setSize(innerWidth, innerHeight);
+  }
 
-    return {
+  function recomputeLayout() {
+    params = getDumbbellResponsiveParams(innerWidth, innerHeight);
+
+    const heroTrigger = document.getElementById('topo');
+    scrollStart = heroTrigger ? Math.max(0, documentRect(heroTrigger).top) : 0;
+    scrollEnd = scrollStart + computeAnimationDistance();
+
+    const startScreen = getHeroSlotScreenPoint(scrollStart);
+    const dockScreen = getDockTargetScreenPoint(scrollEnd);
+    anchors = {
       start: screenToWorldPoint(startScreen, params.fallback.start.z),
       dock: screenToWorldPoint(dockScreen, params.fallback.dock.z),
       screen: { start: startScreen, dock: dockScreen },
     };
   }
 
-  function getHeroSlotScreenPoint(trigger) {
+  function computeAnimationDistance() {
+    // Distance from scrollStart to where the dock target should land at its desired
+    // viewport y. Mirrors the previous getScrollEnd() heuristic but expressed as a
+    // delta from the trigger's start so it works even if #topo isn't at scrollY=0.
+    const dockPoint = getDockTargetDocumentPoint();
+    const minSpan = Math.round(innerHeight * 0.85);
+    if (!dockPoint) return Math.max(minSpan, Math.round(innerHeight * 1.25));
+    const desiredY = (params.screen.dock.y || 0.4) * innerHeight;
+    return Math.max(minSpan, Math.round(dockPoint.y - desiredY - scrollStart));
+  }
+
+  function applyCameraDepth() {
+    if (innerWidth < 760) camera.position.z = 10.7;
+    else if (innerWidth < 1080) camera.position.z = 9.8;
+    else camera.position.z = 9;
+  }
+
+  function getCappedDpr() {
+    const cap = innerWidth < 760 ? 1.25 : 1.5;
+    return Math.min(window.devicePixelRatio || 1, cap);
+  }
+
+  function getViewportSignature() {
+    const visualViewport = window.visualViewport;
+    return [
+      window.innerWidth,
+      window.innerHeight,
+      window.devicePixelRatio || 1,
+      visualViewport?.width || 0,
+      visualViewport?.height || 0,
+      visualViewport?.scale || 1,
+    ].join(':');
+  }
+
+  function hasViewportChanged() {
+    return getViewportSignature() !== lastViewportSignature;
+  }
+
+  function getHeroSlotScreenPoint(scrollAtAnchor) {
     const point = getHeroSlotDocumentPoint();
     if (!point) return normalizedScreenPoint(params.screen.start);
-    return constrainScreenPoint({ x: point.x, y: point.y - (trigger?.start || 0) });
+    return constrainScreenPoint({ x: point.x, y: point.y - scrollAtAnchor });
   }
 
-  function getDockTargetScreenPoint(trigger) {
+  function getDockTargetScreenPoint(scrollAtAnchor) {
     const point = getDockTargetDocumentPoint();
     if (!point) return normalizedScreenPoint(params.screen.dock);
-    return constrainScreenPoint({ x: point.x, y: point.y - (trigger?.end || getScrollEnd()) });
-  }
-
-  function getScrollEnd() {
-    const point = getDockTargetDocumentPoint();
-    if (!point) return Math.round(innerHeight * 1.25);
-    const desiredY = (params.screen.dock.y || 0.4) * innerHeight;
-    return Math.round(Math.max(innerHeight * 0.85, point.y - desiredY));
+    const dockLift = Number.isFinite(params.dockLift) ? params.dockLift * innerHeight : 0;
+    return constrainScreenPoint({ x: point.x, y: point.y - scrollAtAnchor - dockLift });
   }
 
   function getHeroSlotDocumentPoint() {
@@ -233,6 +290,14 @@ export function initDumbbell3D() {
   }
 
   function getDockTargetDocumentPoint() {
+    const dockMarker = document.querySelector('.story-dumbbell-dock');
+    if (dockMarker && dockMarker.offsetParent !== null) {
+      const rect = documentRect(dockMarker);
+      if (rect.width > 0 || rect.height > 0) {
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      }
+    }
+
     if (innerWidth < 760) {
       const image = document.querySelector('#historia .story-img');
       if (image) {
@@ -266,15 +331,37 @@ export function initDumbbell3D() {
   }
 
   function documentRect(element) {
-    let left = 0;
-    let top = 0;
-    let node = element;
-    while (node) {
-      left += node.offsetLeft || 0;
-      top += node.offsetTop || 0;
-      node = node.offsetParent;
+    const layoutRect = layoutDocumentRect(element);
+    if (layoutRect) return layoutRect;
+
+    const rect = element.getBoundingClientRect();
+    return {
+      left: rect.left + getPageScrollX(),
+      top: rect.top + getPageScrollY(),
+      width: rect.width,
+      height: rect.height,
+    };
+  }
+
+  function layoutDocumentRect(element) {
+    if (!(element instanceof HTMLElement)) return null;
+
+    let left = element.offsetLeft;
+    let top = element.offsetTop;
+    let parent = element.offsetParent;
+
+    while (parent instanceof HTMLElement) {
+      left += parent.offsetLeft + parent.clientLeft;
+      top += parent.offsetTop + parent.clientTop;
+      parent = parent.offsetParent;
     }
-    return { left, top, width: element.offsetWidth, height: element.offsetHeight };
+
+    return {
+      left,
+      top,
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+    };
   }
 
   function normalizedScreenPoint(screen) {
@@ -299,6 +386,32 @@ export function initDumbbell3D() {
       z: worldZ,
     };
   }
+}
+
+function getPageScrollY() {
+  const scrollingElement = document.scrollingElement;
+  const primary = Math.max(
+    0,
+    window.scrollY || 0,
+    window.pageYOffset || 0,
+    document.documentElement?.scrollTop || 0,
+    scrollingElement?.scrollTop || 0,
+  );
+  if (primary > 0) return primary;
+  return Math.max(0, document.body?.scrollTop || 0);
+}
+
+function getPageScrollX() {
+  const scrollingElement = document.scrollingElement;
+  const primary = Math.max(
+    0,
+    window.scrollX || 0,
+    window.pageXOffset || 0,
+    document.documentElement?.scrollLeft || 0,
+    scrollingElement?.scrollLeft || 0,
+  );
+  if (primary > 0) return primary;
+  return Math.max(0, document.body?.scrollLeft || 0);
 }
 
 function pixelsToWorldY(px, camera, worldZ = 0) {

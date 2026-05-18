@@ -319,16 +319,34 @@
   border-radius: 50%;
   border: 1px solid var(--c-line);
   color: rgba(242, 244, 248, .72);
-  background: linear-gradient(135deg, rgba(139, 92, 246, .08), rgba(37, 99, 235, .04));
+  background: transparent;
+  background-clip: padding-box;
   text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: circle(50% at 50% 50%);
+  transform: translateZ(0);
   transition:
     transform .42s var(--ease-out),
     border-color .42s var(--ease-out),
-    background .42s var(--ease-out),
     color .42s var(--ease-out),
     box-shadow .42s var(--ease-out);
 }
+.footer-social a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(139, 92, 246, .08), rgba(37, 99, 235, .04));
+  background-clip: padding-box;
+  pointer-events: none;
+  transition: background .42s var(--ease-out);
+}
 .footer-social a svg {
+  position: relative;
+  z-index: 1;
+  display: block;
   width: 17px;
   height: 17px;
   fill: currentColor;
@@ -337,10 +355,14 @@
 .footer-social a:hover,
 .footer-social a:focus-visible {
   border-color: transparent;
-  background: var(--grad);
+  background: transparent;
   color: #fff;
   transform: translateY(-3px);
   box-shadow: 0 14px 30px -12px rgba(94, 44, 165, .55);
+}
+.footer-social a:hover::before,
+.footer-social a:focus-visible::before {
+  background: var(--grad);
 }
 .footer-social a:hover svg,
 .footer-social a:focus-visible svg {
@@ -361,6 +383,7 @@
   transition: color .4s var(--ease-out);
 }
 .footer-totop-arrow {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -368,19 +391,45 @@
   height: 30px;
   border-radius: 50%;
   border: 1px solid var(--c-line);
+  background: transparent;
+  background-clip: padding-box;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: circle(50% at 50% 50%);
+  transform: translateZ(0);
   transition:
-    background .42s var(--ease-out),
     border-color .42s var(--ease-out),
     transform .5s var(--ease-out);
 }
-.footer-totop-arrow svg { width: 12px; height: 12px; }
+.footer-totop-arrow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: transparent;
+  background-clip: padding-box;
+  pointer-events: none;
+  transition: background .42s var(--ease-out);
+}
+.footer-totop-arrow svg {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 12px;
+  height: 12px;
+}
 .footer-totop:hover,
 .footer-totop:focus-visible { color: var(--c-white); }
 .footer-totop:hover .footer-totop-arrow,
 .footer-totop:focus-visible .footer-totop-arrow {
-  background: var(--grad);
+  background: transparent;
   border-color: transparent;
   transform: translateY(-3px);
+}
+.footer-totop:hover .footer-totop-arrow::before,
+.footer-totop:focus-visible .footer-totop-arrow::before {
+  background: var(--grad);
 }
 
 .visually-hidden {

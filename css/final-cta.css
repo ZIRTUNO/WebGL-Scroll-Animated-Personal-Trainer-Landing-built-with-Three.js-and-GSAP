@@ -14,7 +14,7 @@
 
 .final h2 {
   font-size: clamp(40px, 7vw, 108px);
-  line-height: .95;
+  line-height: 1.04;
   margin-bottom: 36px;
 }
 .final h2 span { display: block; }

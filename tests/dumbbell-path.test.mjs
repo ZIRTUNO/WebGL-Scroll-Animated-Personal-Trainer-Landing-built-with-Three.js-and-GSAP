@@ -45,19 +45,28 @@ assert.ok(
 
 assert.ok(
   mobile.screen.dock.x > 0.44 && mobile.screen.dock.x < 0.56,
-  'mobile dock target stays centered over the image path, not the story heading text',
+  'mobile dock target stays centered over the story dock marker',
 );
 assert.ok(
-  mobile.screen.dock.y > 0.38 && mobile.screen.dock.y < 0.58,
-  'mobile dock target lands in the image area instead of the top heading band',
+  mobile.screen.dock.y > 0.22 && mobile.screen.dock.y < 0.34,
+  'mobile dock target lands above the story headline instead of overlapping it',
+);
+assert.ok(
+  mobile.dockLift >= 0 && mobile.dockLift <= 0.018,
+  'mobile docked dumbbell stays close to the explicit blue-reference story marker',
 );
 assert.ok(
   mobile.shrinkStart < 0.36,
   'mobile dumbbell starts shrinking before it crosses the CTA stack',
 );
 assert.ok(
-  desktop.screen.dock.x > 0.52 && desktop.screen.dock.y > 0.32,
-  'desktop dock target sits over the story intro/text-column area',
+  desktop.screen.dock.x > 0.52 && desktop.screen.dock.y > 0.22 && desktop.screen.dock.y < 0.3,
+  'desktop dock target sits next to the story eyebrow and above the headline',
+);
+assert.ok(desktop.dockScale <= 0.14, 'desktop docked dumbbell is a small accent, not a headline overlay');
+assert.ok(
+  desktop.dockLift >= 0 && desktop.dockLift <= 0.022,
+  'desktop docked dumbbell stays close to the explicit blue-reference story marker',
 );
 
 const desktopFinal = getDumbbellPose(1, desktop);
@@ -105,7 +114,7 @@ approx(
   'mobile final screen-plane rotation settles horizontal, not as a vertical sliver over text',
 );
 assert.ok(getDumbbellVisibility(0.06, mobile) > 0.9, 'mobile dumbbell is visible in the reserved hero slot');
-assert.ok(getDumbbellVisibility(0.42, mobile) < 0.05, 'mobile dumbbell hides while crossing the CTA/ticker corridor');
+assert.equal(getDumbbellVisibility(0.42, mobile), 1, 'mobile dumbbell stays visible through the full path');
 assert.ok(getDumbbellVisibility(0.9, mobile) > 0.9, 'mobile dumbbell returns as a small accent over the story image');
 assert.equal(getDumbbellVisibility(0.42, desktop), 1, 'desktop dumbbell stays visible through the full path');
 

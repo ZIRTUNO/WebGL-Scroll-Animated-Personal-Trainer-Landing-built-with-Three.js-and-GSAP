@@ -6,6 +6,16 @@
   gap: 80px;
   align-items: center;
 }
+
+.story-dumbbell-dock {
+  display: inline-block;
+  width: 1px;
+  height: 1px;
+  margin-left: clamp(12px, 2vw, 28px);
+  vertical-align: middle;
+  pointer-events: none;
+}
+
 @media (max-width: 1024px) {
   .story-grid { grid-template-columns: 1fr; gap: 50px; }
 }

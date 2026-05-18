@@ -5,7 +5,7 @@ import { initMagneticButtons } from './magnetic-buttons.js';
 import { initDumbbell3D } from './dumbbell-3d.js';
 import { initSectionNavigation } from './navigation.js';
 import { initCardFx } from './card-fx.js';
-import { initScrollSmoother } from './scroll-smoother.js';
+import { initNativeScrollSync } from './scroll-sync.js';
 import { initNavMenu } from './nav-menu.js';
 
 const GSAP_TIMEOUT_MS = 2500;
@@ -28,7 +28,7 @@ async function boot() {
   const gsapReady = await awaitGsap();
 
   if (gsapReady) {
-    initScrollSmoother();
+    initNativeScrollSync();
     initScrollFx();
     initMagneticButtons();
   }

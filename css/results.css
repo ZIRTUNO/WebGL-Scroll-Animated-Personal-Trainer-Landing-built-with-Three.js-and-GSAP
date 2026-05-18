@@ -43,15 +43,29 @@
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: var(--grad);
+  background: transparent;
+  background-clip: padding-box;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: circle(50% at 50% 50%);
   font-family: 'Exo 2';
   font-weight: 800;
   letter-spacing: .04em;
   font-size: 14px;
+}
+.testi .who .av::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--grad);
+  background-clip: padding-box;
+  pointer-events: none;
 }
 .testi .who span {
   font-size: 10px;

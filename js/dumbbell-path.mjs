@@ -15,14 +15,15 @@ const PRESETS = Object.freeze({
   mobile: {
     screen: {
       start: { x: 0.5, y: 0.27 },
-      dock: { x: 0.5, y: 0.48 },
+      dock: { x: 0.5, y: 0.28 },
     },
     fallback: {
       start: { x: 0, y: 1.34, z: 0.04 },
       dock: { x: 0, y: 0.16, z: -0.02 },
     },
     scale: 0.58,
-    dockScale: 0.18,
+    dockScale: 0.14,
+    dockLift: 0.012,
     shrinkStart: 0.24,
     finalRotationZ: 0,
     orbit: 0.34,
@@ -32,14 +33,15 @@ const PRESETS = Object.freeze({
   tablet: {
     screen: {
       start: { x: 0.5, y: 0.25 },
-      dock: { x: 0.56, y: 0.32 },
+      dock: { x: 0.56, y: 0.27 },
     },
     fallback: {
       start: { x: 0, y: 1.55, z: 0.05 },
       dock: { x: 0.42, y: 0.56, z: -0.02 },
     },
     scale: 1.06,
-    dockScale: 0.16,
+    dockScale: 0.13,
+    dockLift: 0.014,
     orbit: 0.44,
     zBehind: -0.16,
     zFront: 0.24,
@@ -47,14 +49,15 @@ const PRESETS = Object.freeze({
   desktop: {
     screen: {
       start: { x: 0.5, y: 0.24 },
-      dock: { x: 0.67, y: 0.34 },
+      dock: { x: 0.67, y: 0.25 },
     },
     fallback: {
       start: { x: 0, y: 1.78, z: 0.06 },
       dock: { x: 0.64, y: 0.44, z: -0.02 },
     },
     scale: 1.48,
-    dockScale: 0.18,
+    dockScale: 0.12,
+    dockLift: 0.016,
     orbit: 0.56,
     zBehind: -0.18,
     zFront: 0.28,
@@ -80,6 +83,7 @@ export function getDumbbellResponsiveParams(width, height) {
     points: buildPathPoints(fallback.start, fallback.dock, preset),
     scale: preset.scale,
     dockScale: preset.dockScale,
+    dockLift: Number.isFinite(preset.dockLift) ? preset.dockLift : 0,
     spinTurns: 1,
     tumbleTurns: 1,
     finalRotationZ: Number.isFinite(preset.finalRotationZ)
@@ -116,13 +120,7 @@ export function getDumbbellPose(progress, params, anchors) {
 }
 
 export function getDumbbellVisibility(progress, params) {
-  const p = params || getDumbbellResponsiveParams(1280, 720);
-  if (p.breakpoint !== 'mobile') return 1;
-
-  const t = clamp(progress, 0, 1);
-  const fadeOut = smoothstep01((t - 0.12) / 0.18);
-  const fadeIn = smoothstep01((t - 0.68) / 0.16);
-  return clamp(Math.max(1 - fadeOut, fadeIn), 0, 1);
+  return 1;
 }
 
 function getBreakpoint(width) {
@@ -223,11 +221,6 @@ function catmull(p0, p1, p2, p3, t) {
 
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-
-function smoothstep01(t) {
-  const x = clamp(t, 0, 1);
-  return x * x * (3 - 2 * x);
 }
 
 function lerp(a, b, t) {

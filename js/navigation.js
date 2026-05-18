@@ -1,6 +1,6 @@
 /* eslint-env browser */
 
-import { smoothScrollTo } from './scroll-smoother.js';
+import { smoothScrollTo } from './scroll-sync.js';
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ACTIVE_MARKER_RATIO = 0.5;

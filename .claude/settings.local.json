@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(node tests/dumbbell-path.test.mjs)",
-      "PowerShell(node tests/dumbbell-path.test.mjs)"
+      "PowerShell(node tests/dumbbell-path.test.mjs)",
+      "WebSearch",
+      "WebFetch(domain:gsap.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:bugs.webkit.org)"
     ]
   }
 }

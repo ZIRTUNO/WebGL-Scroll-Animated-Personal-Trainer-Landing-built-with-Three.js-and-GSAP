@@ -11,16 +11,34 @@
 }
 
 .scroll-rail .dot {
+  position: relative;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: rgba(242, 244, 248, .2);
+  background-clip: padding-box;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: circle(50% at 50% 50%);
   transition: all .3s;
 }
+.scroll-rail .dot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: transparent;
+  background-clip: padding-box;
+  pointer-events: none;
+}
 .scroll-rail .dot.active {
-  background: var(--grad);
+  background: transparent;
   box-shadow: 0 0 12px var(--c-purple);
   transform: scale(1.6);
+}
+.scroll-rail .dot.active::before {
+  background: var(--grad);
 }
 
 @media (max-width: 768px) {

@@ -46,18 +46,36 @@
 .svc:hover::after { opacity: 1; }
 
 .svc .ic {
+  position: relative;
   width: 60px;
   height: 60px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(139, 92, 246, .15), rgba(37, 99, 235, .15));
+  background: transparent;
+  background-clip: padding-box;
   border: 1px solid var(--c-line);
-  position: relative;
   z-index: 1;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: circle(50% at 50% 50%);
+  transform: translateZ(0);
+}
+.svc .ic::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(139, 92, 246, .15), rgba(37, 99, 235, .15));
+  background-clip: padding-box;
+  pointer-events: none;
 }
 .svc .ic svg {
+  position: relative;
+  z-index: 1;
+  display: block;
   width: 26px;
   height: 26px;
   stroke: var(--c-white);

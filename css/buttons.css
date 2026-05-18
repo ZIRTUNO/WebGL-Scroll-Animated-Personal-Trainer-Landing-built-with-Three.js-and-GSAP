@@ -18,6 +18,9 @@
   cursor: pointer;
   border: 1px solid transparent;
   overflow: hidden;
+  clip-path: inset(0 round 999px);
+  contain: paint;
+  background-clip: padding-box;
   transition:
     transform .42s var(--ease-out),
     box-shadow .42s var(--ease-out),
@@ -43,18 +46,42 @@
 }
 
 .btn .arrow {
+  position: relative;
   flex: 0 0 auto;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .12);
+  background: transparent;
+  background-clip: padding-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform .4s var(--ease), background .4s;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: circle(50% at 50% 50%);
+  transform: translateZ(0);
+  transition: transform .4s var(--ease);
 }
-.btn .arrow svg { width: 10px; height: 10px; }
-.btn:hover .arrow { transform: translateX(4px); background: rgba(255, 255, 255, .25); }
+.btn .arrow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, .12);
+  background-clip: padding-box;
+  pointer-events: none;
+  transition: background .4s;
+}
+.btn .arrow svg {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 10px;
+  height: 10px;
+}
+.btn:hover .arrow { transform: translateX(4px); }
+.btn:hover .arrow::before { background: rgba(255, 255, 255, .25); }
 
 .btn-primary {
   color: #fff;

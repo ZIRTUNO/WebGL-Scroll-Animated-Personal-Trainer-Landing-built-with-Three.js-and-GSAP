@@ -53,28 +53,48 @@
   height: 30px;
   border-radius: 50%;
   border: 1px solid var(--c-line);
+  background: transparent;
+  background-clip: padding-box;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: circle(50% at 50% 50%);
   transition:
     transform var(--dur-base) var(--ease-out),
-    background var(--dur-base) var(--ease-out),
     border-color var(--dur-base) var(--ease-out);
 }
-.q-ico::before,
+.q-ico::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: transparent;
+  background-clip: padding-box;
+  pointer-events: none;
+  transition: background var(--dur-base) var(--ease-out);
+}
 .q-ico::after {
   content: "";
   position: absolute;
-  background: #fff;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  background:
+    linear-gradient(#fff, #fff) center / 12px 1px no-repeat,
+    linear-gradient(#fff, #fff) center / 1px 12px no-repeat;
 }
-.q-ico::before { width: 12px; height: 1px; }
-.q-ico::after  { width: 1px;  height: 12px; }
 
 .q.open .q-ico {
-  background: var(--grad);
+  background: transparent;
   border-color: transparent;
   transform: rotate(45deg);
+}
+.q.open .q-ico::before {
+  background: var(--grad);
 }
 
 .q-body {
