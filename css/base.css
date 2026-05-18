@@ -163,13 +163,26 @@ h1, h2, h3, p, a, button, span {
   text-decoration: none;
   z-index: 9999;
   transform: translateY(-110%);
+  opacity: 0;
+  pointer-events: none;
   transition: transform var(--dur-fast) var(--ease-out);
 }
 .skip-link:focus-visible {
   outline: none;
 }
 html.is-keyboard-modality .skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
   transform: translateY(0);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .skip-link,
+  html.is-keyboard-modality .skip-link:focus-visible {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(-110%) !important;
+  }
 }
 
 :where(a, button, .btn, .q-toggle, .nav ul a, .cta-mini, .more, .ftop ul a):focus-visible {

@@ -6,6 +6,7 @@ import { getDumbbellPose, getDumbbellResponsiveParams, getDumbbellVisibility } f
 const MODEL_URL = 'assets/models/dumbbell/scene.gltf';
 const SUFFIX_RE = /\.(\d{3})$/;
 const RESIZE_DEBOUNCE_MS = 120;
+const PROGRESS_RENDER_EPSILON = 0.00002;
 
 export function initDumbbell3D() {
   const stage = document.getElementById('dumbbell-stage');
@@ -60,6 +61,8 @@ export function initDumbbell3D() {
   let scrollEnd = innerHeight;   // page scroll at which animation lands at dock
   let lastViewportSignature = getViewportSignature();
   let resizeDebounceTimer = 0;
+  let stageAttachment = '';
+  let stageTop = '';
 
   applyCameraDepth();
   recomputeLayout();
@@ -68,7 +71,18 @@ export function initDumbbell3D() {
   const state = { progress: 0, visible: 0 };
   let lastT = -1;
   let lastVisible = -1;
-  let lastScrollY = -1;
+
+  renderer.domElement.addEventListener('webglcontextlost', (event) => {
+    event.preventDefault();
+    state.visible = 0;
+    stage.style.opacity = '0';
+  }, false);
+  renderer.domElement.addEventListener('webglcontextrestored', () => {
+    syncRendererToViewport();
+    recomputeLayout();
+    state.visible = 1;
+    lastT = -1;
+  }, false);
 
   // --- Model load ---
   new GLTFLoader().load(
@@ -118,6 +132,7 @@ export function initDumbbell3D() {
   }, { passive: true });
 
   window.visualViewport?.addEventListener('resize', () => {
+    if (!shouldTrackVisualViewport()) return;
     scheduleLayoutRefresh();
   }, { passive: true });
 
@@ -143,6 +158,7 @@ export function initDumbbell3D() {
       lastViewportSignature = getViewportSignature();
       syncRendererToViewport();
       recomputeLayout();
+      syncStageAttachment(state.progress >= 1);
       lastT = -1;
     };
     if (immediate) {
@@ -160,38 +176,25 @@ export function initDumbbell3D() {
     const span = scrollEnd - scrollStart;
     const rawProgress = span > 0 ? (scrollY - scrollStart) / span : 0;
     state.progress = rawProgress < 0 ? 0 : rawProgress > 1 ? 1 : rawProgress;
+    syncStageAttachment(state.progress >= 1);
 
-    if (shouldRender(scrollY)) {
-      renderFrame(state.progress, scrollY);
+    if (shouldRender()) {
+      renderFrame(state.progress);
       lastT = state.progress;
       lastVisible = state.visible;
-      lastScrollY = scrollY;
     }
     requestAnimationFrame(animate);
   }
 
-  function shouldRender(scrollY) {
-    if (Math.abs(state.progress - lastT) > 0.0001) return true;
+  function shouldRender() {
+    if (Math.abs(state.progress - lastT) > PROGRESS_RENDER_EPSILON) return true;
     if (Math.abs(state.visible - lastVisible) > 0.005) return true;
-    // Past dock: dumbbell follows the page (document-attached), so a scrollY change
-    // means we must re-render even when progress is pinned at 1.
-    if (state.progress >= 0.999 && scrollY !== lastScrollY) return true;
     return false;
   }
 
-  function renderFrame(t, scrollY) {
+  function renderFrame(t) {
     const pose = getDumbbellPose(t, params, anchors);
-    let { x, y, z } = pose.position;
-
-    // Document-attached overscroll: once the animation lands at the dock, the dumbbell
-    // moves with the page content instead of being pinned to a viewport y. The dock
-    // anchor was measured at scrollY=scrollEnd; for any scrollY past that, push the
-    // pivot up in world by the equivalent pixels so it tracks the dock target's
-    // document position.
-    if (t >= 0.999 && scrollY > scrollEnd) {
-      const overscroll = scrollY - scrollEnd;
-      y += pixelsToWorldY(overscroll, camera, anchors?.dock?.z || 0);
-    }
+    const { x, y, z } = pose.position;
 
     pivot.position.set(x, y, z);
     pivot.rotation.set(pose.rotation.x, pose.rotation.y, pose.rotation.z);
@@ -204,6 +207,18 @@ export function initDumbbell3D() {
     stage.style.opacity = (state.visible * getDumbbellVisibility(t, params)).toFixed(3);
 
     renderer.render(scene, camera);
+  }
+
+  function syncStageAttachment(docked) {
+    const nextAttachment = docked ? 'absolute' : 'fixed';
+    const nextTop = docked ? `${Math.round(scrollEnd)}px` : '0px';
+    if (stageAttachment === nextAttachment && stageTop === nextTop) return;
+
+    stage.style.position = nextAttachment;
+    stage.style.top = nextTop;
+    stage.style.left = '0px';
+    stageAttachment = nextAttachment;
+    stageTop = nextTop;
   }
 
   // --- Layout helpers ---
@@ -250,8 +265,11 @@ export function initDumbbell3D() {
   }
 
   function getCappedDpr() {
-    const cap = getResponsiveViewportWidth() < 760 ? 1.25 : 1.5;
-    return Math.min(window.devicePixelRatio || 1, cap);
+    const dpr = window.devicePixelRatio || 1;
+    const responsiveWidth = getResponsiveViewportWidth();
+    if (responsiveWidth < 760) return Math.min(dpr, 1.1);
+    if (responsiveWidth < 1080) return Math.min(dpr, 1.5);
+    return Math.min(dpr, 2);
   }
 
   function getResponsiveViewportWidth() {
@@ -286,16 +304,25 @@ export function initDumbbell3D() {
   }
 
   function getViewportSignature() {
-    const visualViewport = window.visualViewport;
-    return [
+    const baseSignature = [
       window.innerWidth,
       window.innerHeight,
       getResponsiveViewportWidth(),
       window.devicePixelRatio || 1,
+    ];
+    if (!shouldTrackVisualViewport()) return baseSignature.join(':');
+
+    const visualViewport = window.visualViewport;
+    return [
+      ...baseSignature,
       visualViewport?.width || 0,
       visualViewport?.height || 0,
       visualViewport?.scale || 1,
     ].join(':');
+  }
+
+  function shouldTrackVisualViewport() {
+    return isFinePointerViewport();
   }
 
   function hasViewportChanged() {
@@ -445,12 +472,6 @@ function getPageScrollX() {
   );
   if (primary > 0) return primary;
   return Math.max(0, document.body?.scrollLeft || 0);
-}
-
-function pixelsToWorldY(px, camera, worldZ = 0) {
-  const fovRad = THREE.MathUtils.degToRad(camera.fov);
-  const worldHeight = 2 * (camera.position.z - worldZ) * Math.tan(fovRad / 2);
-  return px * (worldHeight / innerHeight);
 }
 
 function smoothstep01(t) {
