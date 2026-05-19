@@ -10,6 +10,7 @@ import { initNavMenu } from './nav-menu.js';
 import { initFocusModality } from './focus-modality.js';
 import { initFloatingFab } from './floating-fab.js';
 import { initProtection } from './protection.js';
+import { initIntro } from './intro.js';
 
 const GSAP_TIMEOUT_MS = 2500;
 
@@ -27,6 +28,7 @@ async function awaitGsap(timeoutMs = GSAP_TIMEOUT_MS) {
 }
 
 async function boot() {
+  initIntro();
   initProtection();
   initFocusModality();
   initSectionNavigation();

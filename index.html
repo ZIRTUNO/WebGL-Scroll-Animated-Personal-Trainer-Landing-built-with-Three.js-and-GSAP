@@ -55,6 +55,38 @@
 
   <link rel="stylesheet" href="css/main.css" />
 
+  <style>
+    /* Critical intro styles inlined so the overlay paints on first frame */
+    .intro-cover {
+      position: fixed;
+      inset: 0;
+      z-index: 9500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(120% 80% at 30% 0%, rgba(94, 44, 165, .55), transparent 60%),
+        radial-gradient(80% 60% at 80% 100%, rgba(37, 99, 235, .42), transparent 55%),
+        #05050a;
+      transition:
+        opacity .9s cubic-bezier(.2, .7, .2, 1),
+        visibility .9s cubic-bezier(.2, .7, .2, 1);
+    }
+    .intro-cover.is-loaded {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    html.is-intro-active,
+    html.is-intro-active body {
+      overflow: hidden;
+      touch-action: none;
+    }
+  </style>
+  <script>
+    document.documentElement.classList.add('is-intro-active');
+  </script>
+
   <script type="importmap">
   {
     "imports": {
@@ -71,6 +103,22 @@
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
+
+  <div class="intro-cover" id="intro" role="status" aria-live="polite" aria-label="Carregando">
+    <div class="intro-cover-inner">
+      <div class="intro-cover-logo" aria-hidden="true">
+        <img src="assets/logo-mark.png" width="1024" height="1024" alt="" />
+      </div>
+      <div class="intro-cover-name" aria-hidden="true">
+        DIEGO<span>·</span>SANTOS
+        <small>PERSONAL TRAINER</small>
+      </div>
+      <div class="intro-cover-bar" aria-hidden="true">
+        <span class="intro-cover-bar-fill"></span>
+      </div>
+      <div class="intro-cover-tagline" aria-hidden="true">CARREGANDO EXPERIÊNCIA</div>
+    </div>
+  </div>
 
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
