@@ -1,0 +1,9 @@
+# Ferramentas locais / artefatos de desenvolvimento
+.claude/
+
+# Dependências (caso venham a existir)
+node_modules/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
